@@ -1,0 +1,3 @@
+admins: []
+maxDeposits: 10
+defaultDepositTime: 7 # days

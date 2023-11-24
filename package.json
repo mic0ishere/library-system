@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "docker compose start db && next dev",
     "build": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
+    "docker": "docker compose rm -f -s -v db && docker compose up -d db",
     "prisma": "prisma",
     "generate": "prisma generate",
     "studio": "prisma studio",
