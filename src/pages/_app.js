@@ -1,5 +1,6 @@
 import { SessionProvider } from "next-auth/react";
 import { GeistSans } from "geist/font/sans";
+import { ProtectedLayout } from "@/components/protected-route";
 import "@/styles/globals.css";
 
 export default function App({
@@ -9,7 +10,9 @@ export default function App({
   return (
     <SessionProvider session={session}>
       <main className={`${GeistSans.variable} font-sans`}>
-        <Component {...pageProps} />
+        <ProtectedLayout>
+          <Component {...pageProps} />
+        </ProtectedLayout>
       </main>
     </SessionProvider>
   );
