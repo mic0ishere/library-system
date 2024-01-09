@@ -1,6 +1,9 @@
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
 import { GeistSans } from "geist/font/sans";
 import { ProtectedLayout } from "@/components/protected-route";
+import Navbar from "@/components/navbar";
+
 import "@/styles/globals.css";
 
 export default function App({
@@ -9,11 +12,19 @@ export default function App({
 }) {
   return (
     <SessionProvider session={session}>
-      <main className={`${GeistSans.variable} font-sans`}>
-        <ProtectedLayout>
-          <Component {...pageProps} />
-        </ProtectedLayout>
-      </main>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <main className={`${GeistSans.variable} font-sans w-full`}>
+          <ProtectedLayout>
+            <Navbar />
+            <Component {...pageProps} />
+          </ProtectedLayout>
+        </main>
+      </ThemeProvider>
     </SessionProvider>
   );
 }
