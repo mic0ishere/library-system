@@ -18,12 +18,12 @@ export default function App({
         enableSystem
         disableTransitionOnChange
       >
-        <main className={`${GeistSans.variable} font-sans w-full`}>
-          <ProtectedLayout>
+        <ProtectedLayout>
+          <main className={`${GeistSans.variable} font-sans w-full mt-8 flex flex-col items-center px-8 md:px-16 lg:px-32`}>
             <Navbar />
             <Component {...pageProps} />
-          </ProtectedLayout>
-        </main>
+          </main>
+        </ProtectedLayout>
       </ThemeProvider>
     </SessionProvider>
   );

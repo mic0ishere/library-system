@@ -11,7 +11,7 @@ import { signOut } from "next-auth/react";
 
 function Navbar() {
   return (
-    <NavigationMenu className="top-4 mx-auto w-screen">
+    <NavigationMenu className="-top-4 mx-auto w-screen">
       <NavigationMenuList>
         <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>
@@ -35,7 +35,7 @@ function Navbar() {
           </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
-      <div className="flex items-center space-x-1 absolute -right-[calc(50vw-50%-1rem)]">
+      <div className="flex items-center space-x-1 sm:absolute sm:-right-[calc(50vw-50%-1rem)]">
         <button
           className={navigationMenuTriggerStyle()}
           onClick={() => signOut()}
