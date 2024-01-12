@@ -97,16 +97,37 @@ function BookAlerts({ books = [] }) {
     );
   }
 
-  if (dueSoon.length > 0) {
+  if (dueSoon.length === 1) {
+    return (
+      <Alert variant="warning">
+        <AlertCircle className="w-6 h-6" />
+        <AlertTitle className="font-semibold">Book due soon</AlertTitle>
+        <AlertDescription>
+          <span className="font-semibold">
+            {dueSoon[0].title} by {dueSoon[0].author}
+          </span>{" "}
+          is due within the next 3 days.
+          <br />
+          You can find more information in the{" "}
+          <Link
+            href="/books"
+            className="underline underline-offset-1 decoration-dashed font-semibold"
+          >
+            My books
+          </Link>{" "}
+          section.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (dueSoon.length > 1) {
     return (
       <Alert variant="warning">
         <AlertCircle className="w-6 h-6" />
         <AlertTitle className="font-semibold">Books due soon</AlertTitle>
         <AlertDescription>
-          You have{" "}
-          <span className="font-semibold">
-            {dueSoon.length === 1 ? "a book" : dueSoon.length + " books"}
-          </span>{" "}
+          You have <span className="font-semibold">{dueSoon.length} books</span>
           due within the next 3 days.
         </AlertDescription>
       </Alert>
