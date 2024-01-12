@@ -11,7 +11,7 @@ import { signOut } from "next-auth/react";
 
 function Navbar() {
   return (
-    <NavigationMenu className="-top-4 mx-auto w-screen">
+    <NavigationMenu className="top-4 mx-auto w-screen">
       <NavigationMenuList>
         <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>

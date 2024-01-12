@@ -5,6 +5,7 @@ import { ProtectedLayout } from "@/components/protected-route";
 import Navbar from "@/components/navbar";
 
 import "@/styles/globals.css";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function App({
   Component,
@@ -19,10 +20,14 @@ export default function App({
         disableTransitionOnChange
       >
         <ProtectedLayout>
-          <main className={`${GeistSans.variable} font-sans w-full mt-8 flex flex-col items-center px-8 md:px-16 lg:px-32`}>
-            <Navbar />
-            <Component {...pageProps} />
-          </main>
+          <TooltipProvider>
+            <main
+              className={`${GeistSans.variable} font-sans w-full flex flex-col items-center px-8 md:px-16 lg:px-32`}
+            >
+              {Component.displayName !== "ErrorPage" && <Navbar />}
+              <Component {...pageProps} />
+            </main>
+          </TooltipProvider>
         </ProtectedLayout>
       </ThemeProvider>
     </SessionProvider>
