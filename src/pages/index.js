@@ -4,20 +4,17 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   BookCheck,
-  ExternalLink,
   FolderOpen,
   LibraryBig,
   LockKeyhole,
   Users,
 } from "lucide-react";
-import { getSession, useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import Link from "next/link";
 
 // const books = [
@@ -93,38 +90,41 @@ export default function Home({ user, isAdmin }) {
         {isAdmin && (
           <>
             <Card>
-              <Link
-                href="/users"
-                className="h-full flex flex-col justify-between"
-              >
-                <CardHeader>
-                  <Users />
-                  <CardTitle>Manage users</CardTitle>
-                  <CardDescription>
-                    View, search and manage the users of our library.
-                  </CardDescription>
-                </CardHeader>
-                <CardFooter>
-                  <LockKeyhole className="h-4 w-4 mr-1" /> Admin Only
-                </CardFooter>
-              </Link>
+              <CardHeader className="pb-2">
+                <Users />
+                <CardTitle>
+                  Users
+                  <LockKeyhole className="inline h-3.5 w-3.5 ml-2" />
+                </CardTitle>
+                <CardDescription>
+                  View, search and manage the users of our library.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Link href="/users">
+                  <Button className="w-full" variant="outline" size="sm">
+                    Manage users
+                  </Button>
+                </Link>
+              </CardContent>
             </Card>
             <Card className="h-full flex flex-col justify-between">
               <CardHeader className="pb-2">
                 <BookCheck />
-                <CardTitle>Book management</CardTitle>
+                <CardTitle>
+                  Book management
+                  <LockKeyhole className="inline h-3.5 w-3.5 ml-2" />
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <Link href="/catalog/status">
                   <Button className="w-full" variant="outline" size="sm">
                     Extensions and returns
-                    <ExternalLink className="h-4 w-4 ml-1" />
                   </Button>
                 </Link>
                 <Link href="/catalog/manage">
                   <Button className="w-full mt-2" variant="outline" size="sm">
                     Add and remove books
-                    <ExternalLink className="h-4 w-4 ml-1" />
                   </Button>
                 </Link>
               </CardContent>
