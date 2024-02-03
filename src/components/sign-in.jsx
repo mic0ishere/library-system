@@ -8,11 +8,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { LogIn } from "lucide-react";
-import { GeistSans } from "geist/font/sans";
 
 function SignIn() {
   return (
-    <div className={`font-sans ${GeistSans.variable} h-screen w-full flex items-center`}>
+    <div className="h-screen w-full flex items-center">
       <Card className="w-[min(380px,90vw)] -mt-12 mx-auto sm:p-2">
         <CardHeader>
           <CardTitle className="text-3xl pb-2">

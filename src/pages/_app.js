@@ -1,11 +1,12 @@
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
-import { GeistSans } from "geist/font/sans";
 import { ProtectedLayout } from "@/components/protected-route";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import Navbar from "@/components/navbar";
 
+// it needs to be imported here to work
+import "geist/font/sans";
 import "@/styles/globals.css";
-import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function App({
   Component,
@@ -22,7 +23,7 @@ export default function App({
         <ProtectedLayout>
           <TooltipProvider>
             <main
-              className={`${GeistSans.variable} font-sans w-full flex flex-col items-center px-8 md:px-16 lg:px-32`}
+              className={`w-full flex flex-col items-center px-8 md:px-16 lg:px-32`}
             >
               {Component.displayName !== "ErrorPage" && <Navbar />}
               <Component {...pageProps} />
