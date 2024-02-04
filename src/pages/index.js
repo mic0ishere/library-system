@@ -66,7 +66,7 @@ export default function Home({ user, isAdmin, booksStr }) {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Link href="/users">
+                <Link href="/manage/users">
                   <Button className="w-full" variant="secondary" size="sm">
                     Manage users
                   </Button>
@@ -74,7 +74,7 @@ export default function Home({ user, isAdmin, booksStr }) {
               </CardContent>
             </Card>
             <Card className="h-full flex flex-col justify-between">
-              <CardHeader className="pb-0">
+              <CardHeader className="pb-4">
                 <BookCheck />
                 <CardTitle>
                   Book management
@@ -82,14 +82,14 @@ export default function Home({ user, isAdmin, booksStr }) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Link href="/catalog/status">
+                <Link href="/manage/books">
                   <Button className="w-full" variant="secondary" size="sm">
-                    Extensions and returns
+                    Manage returns
                   </Button>
                 </Link>
-                <Link href="/catalog/manage">
+                <Link href="/catalog">
                   <Button className="w-full mt-2" variant="secondary" size="sm">
-                    Add and remove books
+                    Modify book catalog
                   </Button>
                 </Link>
               </CardContent>
