@@ -7,7 +7,7 @@ import { newId } from "@/lib/id";
 /**
  * @type {import("next-auth").AuthOptions}
  */
-export default NextAuth({
+export const authOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     AzureADProvider({
@@ -24,4 +24,6 @@ export default NextAuth({
       },
     }),
   ],
-});
+};
+
+export default NextAuth(authOptions);
