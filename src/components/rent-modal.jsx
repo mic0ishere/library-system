@@ -20,6 +20,8 @@ import { useMediaQuery } from "@/lib/use-media-query";
 import { useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { HelpCircleIcon } from "lucide-react";
+import { toast } from "sonner";
+import { useSWRConfig } from "swr";
 
 function RentModal({ row, children }) {
   const [open, setOpen] = useState(false);
@@ -33,7 +35,7 @@ function RentModal({ row, children }) {
           <DialogHeader>
             <DialogTitle>Rent a book</DialogTitle>
           </DialogHeader>
-          <RentForm row={row} />
+          <RentForm row={row} open={setOpen} />
         </DialogContent>
       </Dialog>
     );
@@ -44,7 +46,7 @@ function RentModal({ row, children }) {
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>Rent a book</DrawerTitle>
-          <RentForm row={row} />
+          <RentForm row={row} open={setOpen} />
         </DrawerHeader>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
@@ -56,7 +58,9 @@ function RentModal({ row, children }) {
   );
 }
 
-function RentForm({ row }) {
+function RentForm({ row, open }) {
+  const { mutate } = useSWRConfig();
+
   return (
     <div className="flex flex-col gap-2">
       <h1 className="text-2xl font-bold">{row.title}</h1>
@@ -79,9 +83,46 @@ function RentForm({ row }) {
         </AlertDescription>
       </Alert>
 
-      <Button className="w-full">Rent book</Button>
+      <Button
+        className="w-full mt-2"
+        onClick={async () => {
+          open(false);
+
+          const afterPromise = (data) => {
+            mutate("/api/catalog");
+            return data.message;
+          };
+
+          toast.promise(rentBook(row.id), {
+            loading: "Renting book...",
+            success: afterPromise,
+            error: afterPromise,
+          });
+        }}
+      >
+        Rent book
+      </Button>
     </div>
   );
+}
+
+async function rentBook(bookId) {
+  try {
+    const response = await (
+      await fetch(`/api/rent/${bookId}`, {
+        method: "POST",
+      })
+    ).json();
+
+    if (response.type === "success") {
+      return response;
+    } else {
+      throw new Error(response.message);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error(error.message);
+  }
 }
 
 export default RentModal;

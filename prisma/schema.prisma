@@ -52,19 +52,20 @@ model User {
 }
 
 model Book {
-  id         String     @id @default(cuid())
-  title      String
-  author     String
-  year       String
-  pages      Int
-  isbn       String
-  status     EnumStatus @default(AVAILABLE)
-  dueDate    DateTime?
-  returnedAt DateTime?
-  rentedById String?
-  rentedBy   User?      @relation(fields: [rentedById], references: [id])
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id               String     @id @default(cuid())
+  title            String
+  author           String
+  year             String
+  pages            Int
+  isbn             String
+  status           EnumStatus @default(AVAILABLE)
+  dueDate          DateTime?
+  returnedAt       DateTime?
+  previousRenterId String?
+  rentedById       String?
+  rentedBy         User?      @relation(fields: [rentedById], references: [id])
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
 }
 
 enum EnumStatus {
