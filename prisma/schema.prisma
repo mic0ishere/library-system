@@ -39,39 +39,32 @@ model Session {
 }
 
 model User {
-  id            String         @id @default(cuid())
-  userId        String         @unique
+  id            String    @id @default(cuid())
+  userId        String    @unique
   name          String?
-  email         String?        @unique
+  email         String?   @unique
   emailVerified DateTime?
+  bookCount     Int       @default(0)
   image         String?
   accounts      Account[]
   sessions      Session[]
-  books         BorrowedBook[]
-}
-
-model BorrowedBook {
-  id       String   @id @default(cuid())
-  userId   String
-  bookId   String
-  dueDate  DateTime
-  returned Boolean
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  book     Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  books         Book[]
 }
 
 model Book {
-  id        String         @id @default(cuid())
-  title     String
-  author    String
-  year      String
-  pages     Int
-  isbn      String
-  status    EnumStatus     @default(AVAILABLE)
-  borrowed  BorrowedBook[]
-  userId    String
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  id         String     @id @default(cuid())
+  title      String
+  author     String
+  year       String
+  pages      Int
+  isbn       String
+  status     EnumStatus @default(AVAILABLE)
+  dueDate    DateTime?
+  returnedAt DateTime?
+  rentedById String?
+  rentedBy   User?      @relation(fields: [rentedById], references: [id])
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 enum EnumStatus {
