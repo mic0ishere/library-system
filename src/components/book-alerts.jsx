@@ -7,7 +7,7 @@ import {
 import { AlertCircle, Book } from "lucide-react";
 import Link from "next/link";
 
-function BookAlerts({ books = [] }) {
+function BookAlerts({ books = [], showCatalog = true }) {
   const overdue = books
     .filter((book) => book.due < 0)
     .sort((a, b) => a.due - b.due);
@@ -135,21 +135,23 @@ function BookAlerts({ books = [] }) {
   }
 
   return (
-    <Alert>
-      <Book className="w-6 h-6" />
-      <AlertTitle className="font-semibold">Get reading today</AlertTitle>
-      <AlertDescription>
-        Head over to{" "}
-        <Link
-          href="/catalog"
-          className="underline underline-offset-1 decoration-dashed"
-        >
-          the catalog
-        </Link>{" "}
-        and browse our selection of books. Maybe you&apos;ll find your new
-        favorite series today?
-      </AlertDescription>
-    </Alert>
+    showCatalog && (
+      <Alert>
+        <Book className="w-6 h-6" />
+        <AlertTitle className="font-semibold">Get reading today</AlertTitle>
+        <AlertDescription>
+          Head over to{" "}
+          <Link
+            href="/catalog"
+            className="underline underline-offset-1 decoration-dashed"
+          >
+            the catalog
+          </Link>{" "}
+          and browse our selection of books. Maybe you&apos;ll find your new
+          favorite series today?
+        </AlertDescription>
+      </Alert>
+    )
   );
 }
 
