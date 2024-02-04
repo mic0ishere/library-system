@@ -11,6 +11,7 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import RentModal from "@/components/rent-modal";
 
 import { statuses } from "@/components/data-table/constants";
 
@@ -92,9 +93,11 @@ export const columns = [
     cell: ({ row }) => {
       return (
         row.getValue("status") === "available" && (
-          <Button size="sm" variant="secondary" className="-my-2">
-            Rent <BookUp2Icon className="w-4 h-4 ml-2" />
-          </Button>
+          <RentModal row={row}>
+            <Button size="sm" variant="secondary" className="-my-2">
+              Rent <BookUp2Icon className="w-4 h-4 ml-2" />
+            </Button>
+          </RentModal>
         )
       );
     },
