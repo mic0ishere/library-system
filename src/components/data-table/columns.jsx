@@ -98,7 +98,7 @@ export const columns = [
     cell: ({ row }) => {
       return (
         <div className="w-16">
-          {row.getValue("status") === "available" && (
+          {row.getValue("status") === "AVAILABLE" && (
             <RentModal row={row.original}>
               <Button size="sm" variant="secondary" className="-my-2">
                 Rent <BookUp2Icon className="w-4 h-4 ml-2" />
