@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import prisma from "@/lib/prisma";
 import {
   BookCheck,
   FolderOpen,
@@ -17,45 +18,9 @@ import {
 import { getSession } from "next-auth/react";
 import Link from "next/link";
 
-// const books = [
-//   {
-//     title: "The Lord of the Rings",
-//     author: "J.R.R. Tolkien",
-//     isbn: "978-0618640157",
-//     due: -5,
-//   },
-//   {
-//     title: "The Hobbit",
-//     author: "J.R.R. Tolkien",
-//     isbn: "978-0547928227",
-//     due: -1,
-//   },
-//   {
-//     title: "The Lord of the Rings",
-//     author: "J.R.R. Tolkien",
-//     isbn: "978-0618640157",
-//     due: -5,
-//   },
-//   {
-//     title: "The Hobbit",
-//     author: "J.R.R. Tolkien",
-//     isbn: "978-0547928227",
-//     due: -1,
-//   },
-// ];
+export default function Home({ user, isAdmin, booksStr }) {
+  const books = JSON.parse(booksStr);
 
-const books = [
-  {
-    title: "The Hobbit",
-    author: "J.R.R. Tolkien",
-    isbn: "978-0547928227",
-    due: 1,
-  },
-];
-
-// const books = [];
-
-export default function Home({ user, isAdmin }) {
   return (
     <div className="max-w-[600px] pt-8 pb-16">
       <h1 className="text-4xl">Hello, {user.name ?? ""}</h1>
@@ -145,9 +110,28 @@ export async function getServerSideProps(context) {
     };
   }
 
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session.user.email,
+    },
+    include: {
+      books: true,
+    },
+  });
+
   return {
     props: {
       user: session?.user,
+      booksStr: JSON.stringify(
+        user.books
+          .map((book) => ({
+            ...book,
+            due: Math.floor(
+              (book.dueDate - new Date()) / (1000 * 60 * 60 * 24)
+            ),
+          }))
+          .filter((book) => book.due <= 3)
+      ),
       isAdmin: process.env.ADMINS.includes(session.user.email.toLowerCase()),
     },
   };
