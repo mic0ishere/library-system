@@ -90,15 +90,22 @@ export const columns = [
   },
   {
     id: "actions",
+    /**
+     * @param {{
+     *  row: import('@tanstack/react-table').Row
+     * }} param0 
+     */
     cell: ({ row }) => {
       return (
-        row.getValue("status") === "available" && (
-          <RentModal row={row}>
-            <Button size="sm" variant="secondary" className="-my-2">
-              Rent <BookUp2Icon className="w-4 h-4 ml-2" />
-            </Button>
-          </RentModal>
-        )
+        <div className="w-16">
+          {row.getValue("status") === "available" && (
+            <RentModal row={row.original}>
+              <Button size="sm" variant="secondary" className="-my-2">
+                Rent <BookUp2Icon className="w-4 h-4 ml-2" />
+              </Button>
+            </RentModal>
+          )}
+        </div>
       );
     },
   },
