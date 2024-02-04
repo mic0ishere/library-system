@@ -2,6 +2,7 @@ import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { ProtectedLayout } from "@/components/protected-route";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/navbar";
 
 // it needs to be imported here to work
@@ -22,12 +23,11 @@ export default function App({
       >
         <ProtectedLayout>
           <TooltipProvider>
-            <main
-              className="w-full flex flex-col items-center px-4 md:px-16 lg:px-32"
-            >
+            <main className="w-full flex flex-col items-center px-4 md:px-16 lg:px-32">
               {Component.displayName !== "ErrorPage" && <Navbar />}
               <Component {...pageProps} />
             </main>
+            <Toaster />
           </TooltipProvider>
         </ProtectedLayout>
       </ThemeProvider>
