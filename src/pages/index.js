@@ -57,12 +57,12 @@ const books = [
 
 export default function Home({ user, isAdmin }) {
   return (
-    <div className="pt-8 pb-16">
+    <div className="max-w-[600px] pt-8 pb-16">
       <h1 className="text-4xl">Hello, {user.name ?? ""}</h1>
-      <div className="flex justify-center w-full max-w-[600px] mt-6">
+      <div className="flex justify-center w-full mt-6">
         <BookAlerts books={books} />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-[600px] mt-12">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full mt-12">
         <Card>
           <Link href="/catalog">
             <CardHeader>

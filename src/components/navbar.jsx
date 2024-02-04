@@ -35,7 +35,7 @@ function Navbar() {
           </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
-      <div className="flex items-center space-x-1 sm:absolute sm:-right-[calc(50vw-50%-1rem)]">
+      <div className="flex items-center space-x-2 ml-2 sm:absolute sm:-right-[calc(50vw-50%-1rem)]">
         <button
           className={navigationMenuTriggerStyle()}
           onClick={() => signOut()}

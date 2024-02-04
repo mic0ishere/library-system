@@ -23,7 +23,7 @@ export default function App({
         <ProtectedLayout>
           <TooltipProvider>
             <main
-              className={`w-full flex flex-col items-center px-8 md:px-16 lg:px-32`}
+              className="w-full flex flex-col items-center px-4 md:px-16 lg:px-32"
             >
               {Component.displayName !== "ErrorPage" && <Navbar />}
               <Component {...pageProps} />
