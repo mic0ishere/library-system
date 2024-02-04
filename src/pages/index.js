@@ -90,7 +90,7 @@ export default function Home({ user, isAdmin }) {
         {isAdmin && (
           <>
             <Card>
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-4">
                 <Users />
                 <CardTitle>
                   Users
@@ -102,14 +102,14 @@ export default function Home({ user, isAdmin }) {
               </CardHeader>
               <CardContent>
                 <Link href="/users">
-                  <Button className="w-full" variant="outline" size="sm">
+                  <Button className="w-full" variant="secondary" size="sm">
                     Manage users
                   </Button>
                 </Link>
               </CardContent>
             </Card>
             <Card className="h-full flex flex-col justify-between">
-              <CardHeader className="pb-2">
+              <CardHeader className="pb-0">
                 <BookCheck />
                 <CardTitle>
                   Book management
@@ -118,12 +118,12 @@ export default function Home({ user, isAdmin }) {
               </CardHeader>
               <CardContent>
                 <Link href="/catalog/status">
-                  <Button className="w-full" variant="outline" size="sm">
+                  <Button className="w-full" variant="secondary" size="sm">
                     Extensions and returns
                   </Button>
                 </Link>
                 <Link href="/catalog/manage">
-                  <Button className="w-full mt-2" variant="outline" size="sm">
+                  <Button className="w-full mt-2" variant="secondary" size="sm">
                     Add and remove books
                   </Button>
                 </Link>
