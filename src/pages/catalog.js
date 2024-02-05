@@ -7,6 +7,7 @@ import { getSession } from "next-auth/react";
 import AddNewBookModal from "@/components/add-new-book";
 import { Button } from "@/components/ui/button";
 import { BookPlusIcon } from "lucide-react";
+import isAdmin from "@/lib/is-admin";
 
 export default function Catalog({ booksStr, isAdmin }) {
   return (
@@ -68,7 +69,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       booksStr: JSON.stringify(books),
-      isAdmin: process.env.ADMINS.includes(session.user.email.toLowerCase()),
+      isAdmin: isAdmin(session.user.email),
     },
   };
 }

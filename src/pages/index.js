@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import isAdmin from "@/lib/is-admin";
 import prisma from "@/lib/prisma";
 import {
   BookCheck,
@@ -132,7 +133,7 @@ export async function getServerSideProps(context) {
           }))
           .filter((book) => book.due <= 3)
       ),
-      isAdmin: process.env.ADMINS.includes(session.user.email.toLowerCase()),
+      isAdmin: isAdmin(session.user.email)
     },
   };
 }
