@@ -121,7 +121,7 @@ async function rentBook(bookId) {
     }
   } catch (error) {
     console.error("Error:", error);
-    throw new Error(error.message);
+    throw new Error(error.message || "An unexpected error occured");
   }
 }
 
