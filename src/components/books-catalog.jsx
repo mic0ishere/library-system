@@ -1,10 +1,9 @@
 import useSWR from "swr";
 
-import { columns } from "@/components/data-table/columns";
 import { DataTable } from "@/components/data-table/table";
 import { Alert } from "@/components/ui/alert";
 
-function BooksCatalog() {
+function BooksCatalog({ columns }) {
   const { data: books, error } = useSWR("/api/catalog", (...args) =>
     fetch(...args).then((res) => res.json())
   );

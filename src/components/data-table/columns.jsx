@@ -15,7 +15,7 @@ import RentModal from "@/components/rent-modal";
 
 import { statuses } from "@/components/data-table/constants";
 
-export const columns = [
+export const columns = (isAdmin) => [
   {
     accessorKey: "author",
     header: "Author",
