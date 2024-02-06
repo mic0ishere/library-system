@@ -50,13 +50,15 @@ export default async function handler(req, res) {
       )
     );
 
+    const rentedAt = new Date();
+
     await prisma.book.update({
       where: {
         id: bookId,
       },
       data: {
         status: "RENTED",
-        rentedAt: new Date(),
+        rentedAt: rentedAt,
         dueDate: dueDate,
         rentedBy: {
           connect: {
@@ -65,7 +67,7 @@ export default async function handler(req, res) {
         },
         rentals: {
           create: {
-            rentedAt: new Date(),
+            rentedAt: rentedAt,
             dueDate: dueDate,
             user: {
               connect: {
@@ -88,6 +90,7 @@ export default async function handler(req, res) {
       },
       include: {
         rentedBy: true,
+        rentals: true,
       },
     });
 
@@ -104,13 +107,15 @@ export default async function handler(req, res) {
       return;
     }
 
+    const returnedAt = new Date();
+
     await prisma.book.update({
       where: {
         id: bookId,
       },
       data: {
         status: "BACK_SOON",
-        returnedAt: new Date(),
+        returnedAt: returnedAt,
         rentedBy: {
           disconnect: true,
         },
@@ -124,7 +129,7 @@ export default async function handler(req, res) {
               },
             },
             data: {
-              returnedAt: new Date(),
+              returnedAt: returnedAt,
             },
           },
         },
