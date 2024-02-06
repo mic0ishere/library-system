@@ -1,6 +1,6 @@
 import useSWR from "swr";
 
-import { Alert } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import BookReturnCard from "@/components/return-card";
 import BookAlerts from "@/components/overdue-alerts";
 
@@ -29,7 +29,12 @@ function BooksReturns() {
         below.
       </p>
       <BookAlerts books={books} showCatalog={books.length === 0} />
-      {error && <Alert variant="error">{error.message}</Alert>}
+      {error && (
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error.message}</AlertDescription>
+        </Alert>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-8">
         {books.map((book) => (
           <BookReturnCard key={book.id} book={book} />

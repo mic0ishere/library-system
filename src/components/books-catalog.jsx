@@ -1,7 +1,7 @@
 import useSWR from "swr";
 
 import { DataTable } from "@/components/data-table/table";
-import { Alert } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 function BooksCatalog({ columns }) {
   const { data: books, error } = useSWR("/api/catalog", (...args) =>
@@ -10,7 +10,12 @@ function BooksCatalog({ columns }) {
 
   return (
     <>
-      {error && <Alert variant="error">{error.message}</Alert>}
+      {error && (
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error.message}</AlertDescription>
+        </Alert>
+      )}
       <DataTable columns={columns} data={books || []} />
     </>
   );
