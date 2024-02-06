@@ -31,12 +31,18 @@ export default async function handler(req, res) {
       where: {
         email: session.user.email,
       },
-      include: {
-        books: true,
+      select: {
+        books: {
+          select: {
+            status: true,
+          },
+        },
       },
     });
 
-    if (user.books.length >= process.env.NEXT_PUBLIC_MAXDEPOSITS) {
+    const rentedBooks = user.books.filter((book) => book.status === "RENTED");
+
+    if (rentedBooks.length >= process.env.NEXT_PUBLIC_MAXDEPOSITS) {
       res.status(200).json({
         message: `You have reached the maximum number of rented books. Please return a book to rent another one.`,
         type: "error",
@@ -116,9 +122,6 @@ export default async function handler(req, res) {
       data: {
         status: "BACK_SOON",
         returnedAt: returnedAt,
-        rentedBy: {
-          disconnect: true,
-        },
         rentals: {
           update: {
             where: {

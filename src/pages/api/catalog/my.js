@@ -12,6 +12,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const books = await prisma.book.findMany({
       where: {
+        status: "RENTED",
         rentedBy: {
           email: session.user.email,
         },

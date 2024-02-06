@@ -72,9 +72,6 @@ export default async function handler(req, res) {
           data: {
             status,
             returnedAt,
-            rentedBy: {
-              disconnect: true,
-            },
             rentals: {
               update: {
                 where: {
@@ -109,9 +106,13 @@ export default async function handler(req, res) {
           },
           data: {
             status: "BACK_SOON",
+            rentedAt: previousRental.rentedAt,
+            dueDate: previousRental.dueDate,
             returnedAt: previousRental.returnedAt || returnedAt,
             rentedBy: {
-              disconnect: true,
+              connect: {
+                id: previousRental.userId,
+              },
             },
             rentals: {
               update: {
@@ -168,6 +169,7 @@ export default async function handler(req, res) {
             status: "RENTED",
             rentedAt: rentedAt,
             dueDate: dueDate,
+            returnedAt: null,
             rentedBy: { connect: { id: userId } },
             rentals: {
               create: {
@@ -191,6 +193,10 @@ export default async function handler(req, res) {
             status,
             rentedAt: null,
             dueDate: null,
+            returnedAt: null,
+            rentedBy: {
+              disconnect: true,
+            },
           },
         });
       }
