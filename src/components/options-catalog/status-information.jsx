@@ -35,14 +35,37 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Check, ChevronsUpDown, InfoIcon } from "lucide-react";
 
 import { useState } from "react";
 import useSWR from "swr";
 import { statuses } from "@/components/constants";
 import { cn } from "@/lib/utils";
 
-function StatusInformation({ row, users = [] }) {
+const statusChangeWarnings = {
+  AVAILABLE: {
+    type: ["RENTED"],
+    message:
+      "The book will be marked as if it was just returned and confirmed to be available.",
+  },
+  NOT_AVAILABLE: {
+    type: ["RENTED"],
+    message:
+      "The book will be marked as if it was just returned and confirmed to be not available.",
+  },
+  RENTED: {
+    type: ["AVAILABLE", "BACK_SOON", "NOT_AVAILABLE"],
+    message:
+      "The book will be marked as if it was just rented by the selected user.",
+  },
+  BACK_SOON: {
+    type: ["AVAILABLE", "RENTED", "NOT_AVAILABLE"],
+    message:
+      "The book will be marked as if it was just returned by the previous renter and will be waiting for the confirmation.",
+  },
+};
+
+function StatusInformation({ row, users = [], onSubmit }) {
   const {
     data: book,
     isLoading,
@@ -85,52 +108,56 @@ function StatusInformation({ row, users = [] }) {
               </TableHeader>
               <TableBody>
                 {book?.rentals?.length > 0 ? (
-                  book?.rentals?.map((rental) => (
-                    <TableRow key={rental.id}>
-                      <TableCell className="font-medium text-left whitespace-nowrap">
-                        {rental.user.name}
-                      </TableCell>
-                      <TableCell>
-                        {new Date(rental.rentedAt).toLocaleDateString()}
-                      </TableCell>
-                      {rental.returnedAt ? (
-                        <TableCell
-                          className={
-                            new Date(rental.returnedAt).setHours(0, 0, 0, 0) -
-                              new Date(rental.dueDate).setHours(
-                                23,
-                                59,
-                                59,
-                                999
-                              ) >
-                              0 &&
-                            "text-red-600 dark:text-red-400 font-semibold"
-                          }
-                        >
-                          {new Date(rental.returnedAt).toLocaleDateString()}
+                  book?.rentals
+                    ?.sort(
+                      (a, b) => new Date(b.rentedAt) - new Date(a.rentedAt)
+                    )
+                    .map((rental) => (
+                      <TableRow key={rental.id}>
+                        <TableCell className="font-medium text-left whitespace-nowrap">
+                          {rental.user.name}
                         </TableCell>
-                      ) : (
-                        <TableCell
-                          className={
-                            new Date(rental.dueDate).setHours(0, 0, 0, 0) -
+                        <TableCell>
+                          {new Date(rental.rentedAt).toLocaleDateString()}
+                        </TableCell>
+                        {rental.returnedAt ? (
+                          <TableCell
+                            className={
+                              new Date(rental.returnedAt).setHours(0, 0, 0, 0) -
+                                new Date(rental.dueDate).setHours(
+                                  23,
+                                  59,
+                                  59,
+                                  999
+                                ) >
+                                0 &&
+                              "text-red-600 dark:text-red-400 font-semibold"
+                            }
+                          >
+                            {new Date(rental.returnedAt).toLocaleDateString()}
+                          </TableCell>
+                        ) : (
+                          <TableCell
+                            className={
+                              new Date(rental.dueDate).setHours(0, 0, 0, 0) -
+                                new Date().setHours(23, 59, 59, 999) <
+                                0 &&
+                              "text-red-600 dark:text-red-400 font-semibold"
+                            }
+                          >
+                            {new Date(rental.dueDate).setHours(0, 0, 0, 0) -
                               new Date().setHours(23, 59, 59, 999) <
-                              0 &&
-                            "text-red-600 dark:text-red-400 font-semibold"
-                          }
-                        >
-                          {new Date(rental.dueDate).setHours(0, 0, 0, 0) -
-                            new Date().setHours(23, 59, 59, 999) <
-                          0
-                            ? "Overdue"
-                            : "Rented"}
-                        </TableCell>
-                      )}
+                            0
+                              ? "Overdue"
+                              : "Rented"}
+                          </TableCell>
+                        )}
 
-                      <TableCell className="text-right">
-                        {new Date(rental.dueDate).toLocaleDateString()}
-                      </TableCell>
-                    </TableRow>
-                  ))
+                        <TableCell className="text-right">
+                          {new Date(rental.dueDate).toLocaleDateString()}
+                        </TableCell>
+                      </TableRow>
+                    ))
                 ) : (
                   <TableRow>
                     <TableCell colSpan={4} className="text-center">
@@ -215,11 +242,29 @@ function StatusInformation({ row, users = [] }) {
             </PopoverContent>
           </Popover>
         </div>
+        {statusChangeWarnings[status].type.includes(initialStatus.value) && (
+          <Alert
+            variant="info"
+            className="text-left mt-2 flex items-center text-sm pl-11"
+          >
+            <InfoIcon className="w-5 h-5" />
+            {statusChangeWarnings[status].message}
+          </Alert>
+        )}
         <Button
           className="w-full mt-4"
-          disabled={!selectedUser && status === "RENTED"}
+          disabled={
+            (status === "RENTED" && !selectedUser) ||
+            status === initialStatus.value
+          }
+          onClick={() => {
+            onSubmit({
+              status,
+              userId: selectedUser,
+            });
+          }}
         >
-          Save
+          Update
         </Button>
       </div>
     </div>

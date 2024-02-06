@@ -25,6 +25,9 @@ export default async function handler(req, res) {
       where: {
         id: bookId,
       },
+      include: {
+        rentals: true,
+      },
     })
     .catch((error) => {
       res.status(500).json({
@@ -43,7 +46,158 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (req.method === "PUT") {
+  if (req.method === "POST") {
+    const { status, userId = null } = data;
+
+    try {
+      if (
+        book.status === "RENTED" &&
+        ["AVAILABLE", "NOT_AVAILABLE"].includes(status)
+      ) {
+        const returnedAt = new Date();
+        await prisma.book.update({
+          where: {
+            id: bookId,
+          },
+          data: {
+            status,
+            returnedAt,
+            rentedBy: {
+              disconnect: true,
+            },
+            rentals: {
+              update: {
+                where: {
+                  unique_rental: {
+                    bookId: book.id,
+                    userId: book.rentals[book.rentals.length - 1].userId,
+                    rentedAt: book.rentals[book.rentals.length - 1].rentedAt,
+                  },
+                },
+                data: {
+                  returnedAt: returnedAt,
+                },
+              },
+            },
+          },
+        });
+      } else if (status === "BACK_SOON") {
+        const previousRental = book.rentals[book.rentals.length - 1];
+        if (!previousRental) {
+          res.status(400).json({
+            message: "No previous rental found",
+            type: "error",
+          });
+          return;
+        }
+
+        const returnedAt = new Date();
+
+        await prisma.book.update({
+          where: {
+            id: bookId,
+          },
+          data: {
+            status: "BACK_SOON",
+            returnedAt: previousRental.returnedAt || returnedAt,
+            rentedBy: {
+              disconnect: true,
+            },
+            rentals: {
+              update: {
+                where: {
+                  unique_rental: {
+                    bookId: book.id,
+                    userId: previousRental.userId,
+                    rentedAt: previousRental.rentedAt,
+                  },
+                },
+                data: {
+                  returnedAt: previousRental.returnedAt || returnedAt,
+                },
+              },
+            },
+          },
+        });
+      } else if (status === "RENTED") {
+        if (!userId) {
+          res.status(400).json({
+            message: "User ID is required to change status",
+            type: "error",
+          });
+          return;
+        }
+
+        const user = await prisma.user.findUnique({
+          where: {
+            id: userId,
+          },
+        });
+
+        if (!user) {
+          res.status(404).json({
+            message: "User not found",
+            type: "error",
+          });
+          return;
+        }
+
+        const dueDate = new Date(
+          new Date().setDate(
+            new Date().getDate() + process.env.NEXT_PUBLIC_DEFAULTDEPOSITTIME
+          )
+        );
+
+        const rentedAt = new Date();
+
+        await prisma.book.update({
+          where: {
+            id: bookId,
+          },
+          data: {
+            status: "RENTED",
+            rentedAt: rentedAt,
+            dueDate: dueDate,
+            rentedBy: { connect: { id: userId } },
+            rentals: {
+              create: {
+                rentedAt: rentedAt,
+                dueDate: dueDate,
+                user: {
+                  connect: {
+                    id: userId,
+                  },
+                },
+              },
+            },
+          },
+        });
+      } else {
+        await prisma.book.update({
+          where: {
+            id: bookId,
+          },
+          data: {
+            status,
+            rentedAt: null,
+            dueDate: null,
+          },
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        message:
+          "Error occured while updating book status in the catalog. Please try again later.",
+        type: "error",
+      });
+      return console.error(error);
+    }
+
+    res.status(200).json({
+      message: `Updated status of ${book.title} in the catalog`,
+      type: "success",
+    });
+  } else if (req.method === "PUT") {
     try {
       Joi.assert(data, bookSchema);
     } catch (error) {

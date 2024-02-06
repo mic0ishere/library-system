@@ -76,6 +76,16 @@ function BookOptions({ row, rent, adminProps, children }) {
     });
   };
 
+  const onStatusUpdate = async (data) => {
+    setOpen(false);
+
+    toast.promise(statusUpdate(row.id, data), {
+      loading: `Updating status for "${row.title}"`,
+      success: afterPromise,
+      error: afterPromise,
+    });
+  };
+
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -108,7 +118,13 @@ function BookOptions({ row, rent, adminProps, children }) {
               </DialogClose>
             </>
           )}
-          {categoryOpen == "status" && <StatusInformation row={row} users={adminProps?.users ?? []} />}
+          {categoryOpen == "status" && (
+            <StatusInformation
+              row={row}
+              users={adminProps?.users ?? []}
+              onSubmit={onStatusUpdate}
+            />
+          )}
         </DialogContent>
       </Dialog>
     );
@@ -138,7 +154,13 @@ function BookOptions({ row, rent, adminProps, children }) {
           {categoryOpen === "delete" && (
             <BookDeleteConfirmation row={row} onSubmit={onBookDelete} />
           )}
-          {categoryOpen == "status" && <StatusInformation row={row} users={adminProps?.users ?? []} />}
+          {categoryOpen == "status" && (
+            <StatusInformation
+              row={row}
+              users={adminProps?.users ?? []}
+              onSubmit={onStatusUpdate}
+            />
+          )}
         </DrawerHeader>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
@@ -207,6 +229,29 @@ async function editBook(id, data) {
     const response = await (
       await fetch(`/api/catalog/${id}`, {
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+    ).json();
+
+    if (response.type === "success") {
+      return response;
+    } else {
+      throw new Error(response.message);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    throw new Error(error.message || "An unexpected error occured");
+  }
+}
+
+async function statusUpdate(id, data) {
+  try {
+    const response = await (
+      await fetch(`/api/catalog/${id}`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
