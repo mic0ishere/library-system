@@ -8,7 +8,11 @@ export default function Books({ userStr }) {
   const user = JSON.parse(userStr);
 
   return (
-    <div className="w-full pt-8 pb-16 max-w-[900px]">
+    <div
+      className={`w-full pt-8 pb-16 ${
+        user.books.length > 0 ? "max-w-[900px]" : "max-w-[600px]"
+      }`}
+    >
       <h1 className="text-4xl">Your rented books</h1>
       <SWRConfig value={{ fallback: { "/api/catalog/my": user.books } }}>
         <BooksReturns />
