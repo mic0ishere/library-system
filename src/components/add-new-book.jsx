@@ -76,8 +76,6 @@ function AddNewBookModal({ children }) {
 
 async function addNewBook(data) {
   try {
-    console.log(data);
-
     const response = await (
       await fetch(`/api/catalog`, {
         method: "POST",
