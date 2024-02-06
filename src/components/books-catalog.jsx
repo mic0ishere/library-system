@@ -11,9 +11,9 @@ function BooksCatalog({ columns }) {
   return (
     <>
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="mb-4">
           <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error.message}</AlertDescription>
+          <AlertDescription>{error?.message}</AlertDescription>
         </Alert>
       )}
       <DataTable columns={columns} data={books || []} />

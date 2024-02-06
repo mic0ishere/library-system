@@ -30,10 +30,11 @@ import { useState } from "react";
 import { useSWRConfig } from "swr";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { toast } from "sonner";
+import StatusInformation from "./status-information";
 
 const titles = {
   rent: "Rent a book",
-  status: "Book status",
+  status: "Renting status",
   edit: "Edit book",
   delete: "Delete book",
 };
@@ -84,29 +85,30 @@ function BookOptions({ row, rent, children }) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{open ? titles[categoryOpen] : ""}</DialogTitle>
-            {categoryOpen === "rent" && <RentForm row={row} open={setOpen} />}
-            {categoryOpen === "edit" && (
-              <BookForm
-                buttonLabel="Edit book"
-                onSubmit={onBookEdit}
-                defaultValues={{
-                  title: row.title,
-                  author: row.author,
-                  year: row.year,
-                  pages: row.pages,
-                  isbn: row.isbn,
-                }}
-              />
-            )}
-            {categoryOpen === "delete" && (
-              <>
-                <BookDeleteConfirmation row={row} onSubmit={onBookDelete} />
-                <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
-                </DialogClose>
-              </>
-            )}
           </DialogHeader>
+          {categoryOpen === "rent" && <RentForm row={row} open={setOpen} />}
+          {categoryOpen === "edit" && (
+            <BookForm
+              buttonLabel="Edit book"
+              onSubmit={onBookEdit}
+              defaultValues={{
+                title: row.title,
+                author: row.author,
+                year: row.year,
+                pages: row.pages,
+                isbn: row.isbn,
+              }}
+            />
+          )}
+          {categoryOpen === "delete" && (
+            <>
+              <BookDeleteConfirmation row={row} onSubmit={onBookDelete} />
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+            </>
+          )}
+          {categoryOpen == "status" && <StatusInformation row={row} />}
         </DialogContent>
       </Dialog>
     );
@@ -136,6 +138,7 @@ function BookOptions({ row, rent, children }) {
           {categoryOpen === "delete" && (
             <BookDeleteConfirmation row={row} onSubmit={onBookDelete} />
           )}
+          {categoryOpen == "status" && <StatusInformation row={row} />}
         </DrawerHeader>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
