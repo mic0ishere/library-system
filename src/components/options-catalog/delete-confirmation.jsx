@@ -17,7 +17,7 @@ function BookDeleteConfirmation({ row, onSubmit }) {
             permanently deleted.
           </AlertDescription>
         </Alert>
-        <Button className="w-full mt-2" variant="destructive" onClick={onSubmit}>
+        <Button className="w-full mt-4 -mb-2" variant="destructive" onClick={onSubmit}>
           Delete book
         </Button>
       </div>

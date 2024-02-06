@@ -82,7 +82,7 @@ function BookOptions({ row, rent, children }) {
         <BookOptionsDropdown setCategory={changeCategory} rentAvailable={rent}>
           {children}
         </BookOptionsDropdown>
-        <DialogContent>
+        <DialogContent className={categoryOpen == "status" && "max-w-xl"}>
           <DialogHeader>
             <DialogTitle>{open ? titles[categoryOpen] : ""}</DialogTitle>
           </DialogHeader>
