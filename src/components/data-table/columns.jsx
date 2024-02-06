@@ -3,6 +3,7 @@ import {
   ArrowDownAzIcon,
   ArrowUpAzIcon,
   BookUp2Icon,
+  MenuIcon,
 } from "lucide-react";
 
 import {
@@ -14,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import RentModal from "@/components/rent-modal";
 
 import { statuses } from "@/components/data-table/constants";
+import BookOptions from "../book-options-catalog";
 
 export const columns = (isAdmin) => [
   {
@@ -93,12 +95,25 @@ export const columns = (isAdmin) => [
     /**
      * @param {{
      *  row: import('@tanstack/react-table').Row
-     * }} param0 
+     * }} param0
      */
     cell: ({ row }) => {
+      const rent = row.getValue("status") === "AVAILABLE";
+
+      if (isAdmin)
+        return (
+          <div className="w-24">
+            <BookOptions row={row.original} rent={rent}>
+              <Button size="sm" variant="secondary" className="-my-2">
+                Options <MenuIcon className="w-4 h-4 ml-2" />
+              </Button>
+            </BookOptions>
+          </div>
+        );
+
       return (
         <div className="w-16">
-          {row.getValue("status") === "AVAILABLE" && (
+          {rent && (
             <RentModal row={row.original}>
               <Button size="sm" variant="secondary" className="-my-2">
                 Rent <BookUp2Icon className="w-4 h-4 ml-2" />

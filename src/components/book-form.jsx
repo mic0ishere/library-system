@@ -40,7 +40,7 @@ function BookForm({
           <Field form={form} name="author">
             Author
           </Field>
-          <div className="w-full flex flex-row sm:space-x-2">
+          <div className="w-full flex flex-col sm:flex-row space-y-2 sm:space-y- sm:space-x-2">
             <Field form={form} name="year">
               Publishing year
             </Field>

@@ -125,4 +125,5 @@ async function rentBook(bookId) {
   }
 }
 
+export { RentForm };
 export default RentModal;
