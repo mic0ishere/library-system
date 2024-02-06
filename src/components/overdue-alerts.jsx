@@ -9,9 +9,9 @@ import Link from "next/link";
 
 function BookAlerts({ books = [], showCatalog = true }) {
   const overdue = books
-    .filter((book) => book.due < 0)
+    .filter((book) => book.due <= 0)
     .sort((a, b) => a.due - b.due);
-  const dueSoon = books.filter((book) => book.due <= 3 && book.due >= 0);
+  const dueSoon = books.filter((book) => book.due <= 3 && book.due > 0);
 
   if (overdue.length === 1) {
     return (
@@ -30,10 +30,21 @@ function BookAlerts({ books = [], showCatalog = true }) {
               <p className="text-xs">ISBN: {overdue[0].isbn}</p>
             </TooltipContent>
           </Tooltip>{" "}
-          was due{" "}
-          <span className="font-semibold">
-            {new Intl.RelativeTimeFormat("en").format(overdue[0].due, "day")}
-          </span>
+          {overdue[0].due === 0 ? (
+            <>
+              is due <span className="font-semibold">today</span>
+            </>
+          ) : (
+            <>
+              was due{" "}
+              <span className="font-semibold">
+                {new Intl.RelativeTimeFormat("en").format(
+                  overdue[0].due,
+                  "day"
+                )}
+              </span>
+            </>
+          )}
           .<br /> Please return it as soon as possible.
         </AlertDescription>
       </Alert>
@@ -61,7 +72,12 @@ function BookAlerts({ books = [], showCatalog = true }) {
                   <p className="text-xs">ISBN: {book.isbn}</p>
                   <p className="font-semibold text-red-500">
                     Due{" "}
-                    {new Intl.RelativeTimeFormat("en").format(book.due, "day")}
+                    {book.due === 0
+                      ? "today"
+                      : new Intl.RelativeTimeFormat("en").format(
+                          book.due,
+                          "day"
+                        )}
                   </p>
                 </TooltipContent>
               </Tooltip>

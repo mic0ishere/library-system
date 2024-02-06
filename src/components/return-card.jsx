@@ -51,7 +51,10 @@ function BookReturnCard({ book }) {
       <CardContent>
         <p className={book.due <= 0 && "text-red-500"}>
           <strong>Due date:</strong> {new Date(book.dueDate).toDateString()} (
-          {new Intl.RelativeTimeFormat("en").format(book.due, "day")})
+          {book.due === 0
+            ? "today"
+            : new Intl.RelativeTimeFormat("en").format(book.due, "day")}
+          )
         </p>
         <ReturnModal book={book}>
           <Button variant="outline" className="w-full mt-4">
@@ -132,7 +135,7 @@ function ReturnForm({ book, open }) {
           toast.promise(returnBook(book.id), {
             loading: "Returning book...",
             success: afterPromise,
-            error: afterPromise
+            error: afterPromise,
           });
         }}
       >

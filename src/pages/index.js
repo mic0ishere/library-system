@@ -19,6 +19,7 @@ import Link from "next/link";
 import { getSession } from "next-auth/react";
 import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
+import dateDifference from "@/lib/date-difference";
 
 export default function Home({ user, isAdmin, booksStr }) {
   const books = JSON.parse(booksStr);
@@ -84,7 +85,7 @@ export default function Home({ user, isAdmin, booksStr }) {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <Link href="/manage/books">
+                <Link href="/manage/returns">
                   <Button className="w-full" variant="secondary" size="sm">
                     Manage returns
                   </Button>
@@ -117,7 +118,11 @@ export async function getServerSideProps(context) {
       email: session.user.email,
     },
     include: {
-      books: true,
+      books: {
+        where: {
+          status: "RENTED",
+        },
+      },
     },
   });
 
@@ -128,13 +133,11 @@ export async function getServerSideProps(context) {
         user.books
           .map((book) => ({
             ...book,
-            due: Math.floor(
-              (book.dueDate - new Date()) / (1000 * 60 * 60 * 24)
-            ),
+            due: dateDifference(book.dueDate, Date.now()),
           }))
           .filter((book) => book.due <= 3)
       ),
-      isAdmin: isAdmin(session.user.email)
+      isAdmin: isAdmin(session.user.email),
     },
   };
 }

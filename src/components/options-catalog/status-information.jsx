@@ -41,6 +41,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import { statuses } from "@/components/constants";
 import { cn } from "@/lib/utils";
+import dateDifference from "@/lib/date-difference";
 
 const statusChangeWarnings = {
   // new status to be set
@@ -125,14 +126,10 @@ function StatusInformation({ row, users = [], onSubmit }) {
                         {rental.returnedAt ? (
                           <TableCell
                             className={
-                              new Date(rental.returnedAt).setHours(0, 0, 0, 0) -
-                                new Date(rental.dueDate).setHours(
-                                  23,
-                                  59,
-                                  59,
-                                  999
-                                ) >
-                                0 &&
+                              dateDifference(
+                                rental.returnedAt,
+                                rental.dueDate
+                              ) > 0 &&
                               "text-red-600 dark:text-red-400 font-semibold"
                             }
                           >
@@ -141,15 +138,11 @@ function StatusInformation({ row, users = [], onSubmit }) {
                         ) : (
                           <TableCell
                             className={
-                              new Date(rental.dueDate).setHours(0, 0, 0, 0) -
-                                new Date().setHours(23, 59, 59, 999) <
-                                0 &&
+                              dateDifference(rental.dueDate, Date.now()) < 0 &&
                               "text-red-600 dark:text-red-400 font-semibold"
                             }
                           >
-                            {new Date(rental.dueDate).setHours(0, 0, 0, 0) -
-                              new Date().setHours(23, 59, 59, 999) <
-                            0
+                            {dateDifference(rental.dueDate, Date.now()) < 0
                               ? "Overdue"
                               : "Rented"}
                           </TableCell>

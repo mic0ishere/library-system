@@ -3,6 +3,7 @@ import useSWR from "swr";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import BookReturnCard from "@/components/return-card";
 import BookAlerts from "@/components/overdue-alerts";
+import dateDifference from "@/lib/date-difference";
 
 function BooksReturns() {
   const { data, error } = useSWR("/api/catalog/my", (...args) =>
@@ -12,9 +13,7 @@ function BooksReturns() {
   const books = data
     .map((book) => ({
       ...book,
-      due: Math.floor(
-        (new Date(book.dueDate) - new Date()) / (1000 * 60 * 60 * 24)
-      ),
+      due: dateDifference(book.dueDate, Date.now()),
     }))
     .sort((a, b) => a.due - b.due);
 
