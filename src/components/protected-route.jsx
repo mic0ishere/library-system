@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import SignIn from "./sign-in";
+import SignIn from "@/components/sign-in";
 
 export const ProtectedLayout = ({ children }) => {
   const { status: sessionStatus } = useSession();

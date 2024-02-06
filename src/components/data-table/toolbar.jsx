@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-import { statuses } from "./constants";
-import { DataTableFacetedFilter } from "./faceted-filter";
 import { XIcon } from "lucide-react";
+
+import { DataTableFacetedFilter } from "@/components/data-table/faceted-filter";
+import { statuses } from "@/components/constants";
 
 export function DataTableToolbar({ table }) {
   const isFiltered = table.getState().columnFilters.length > 0;

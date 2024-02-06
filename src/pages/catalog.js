@@ -1,12 +1,13 @@
-import { SWRConfig } from "swr";
-import prisma from "@/lib/prisma";
-
-import { columns } from "@/components/data-table/columns";
-import BooksCatalog from "@/components/books-catalog";
-import { getSession } from "next-auth/react";
-import AddNewBookModal from "@/components/add-new-book";
-import { Button } from "@/components/ui/button";
 import { BookPlusIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { SWRConfig } from "swr";
+import BooksCatalog from "@/components/books-catalog";
+import AddNewBookModal from "@/components/add-new-book";
+
+import { columns } from "@/components/catalog-columns";
+
+import { getSession } from "next-auth/react";
+import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
 
 export default function Catalog({ booksStr, isAdmin }) {

@@ -1,8 +1,9 @@
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
-import { ProtectedLayout } from "@/components/protected-route";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { ProtectedLayout } from "@/components/protected-route";
 import { Toaster } from "@/components/ui/sonner";
+
 import Navbar from "@/components/navbar";
 
 // it needs to be imported here to work

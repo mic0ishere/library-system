@@ -19,8 +19,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { DataTableToolbar } from "./toolbar";
-import { DataTablePagination } from "./pagination";
+import { DataTableToolbar } from "@/components/data-table/toolbar";
+import { DataTablePagination } from "@/components/data-table/pagination";
 
 export function DataTable({ columns, data }) {
   const [columnFilters, setColumnFilters] = useState([]);

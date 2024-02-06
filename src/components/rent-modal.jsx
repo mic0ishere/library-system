@@ -15,13 +15,13 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-
-import { useMediaQuery } from "@/lib/use-media-query";
-import { useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { HelpCircleIcon } from "lucide-react";
-import { toast } from "sonner";
+
+import { useState } from "react";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { useSWRConfig } from "swr";
+import { toast } from "sonner";
 
 function RentModal({ row, children }) {
   const [open, setOpen] = useState(false);

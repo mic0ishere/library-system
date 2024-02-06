@@ -16,12 +16,12 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 
-import { useSWRConfig } from "swr";
 import { useState } from "react";
 import { useMediaQuery } from "@/lib/use-media-query";
+import { useSWRConfig } from "swr";
 import { toast } from "sonner";
 
-import BookForm from "./book-form";
+import BookForm from "@/components/options-catalog/edit-form";
 
 function AddNewBookModal({ children }) {
   const { mutate } = useSWRConfig();

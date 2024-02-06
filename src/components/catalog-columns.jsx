@@ -12,10 +12,11 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+
+import BookOptions from "@/components/options-catalog/options-catalog";
 import RentModal from "@/components/rent-modal";
 
-import { statuses } from "@/components/data-table/constants";
-import BookOptions from "../book-options-catalog";
+import { statuses } from "@/components/constants";
 
 export const columns = (isAdmin) => [
   {

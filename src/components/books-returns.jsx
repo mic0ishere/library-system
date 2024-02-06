@@ -1,8 +1,8 @@
 import useSWR from "swr";
 
 import { Alert } from "@/components/ui/alert";
-import BookReturnCard from "@/components/book-return-card";
-import BookAlerts from "./book-alerts";
+import BookReturnCard from "@/components/return-card";
+import BookAlerts from "@/components/overdue-alerts";
 
 function BooksReturns() {
   const { data, error } = useSWR("/api/catalog/my", (...args) =>

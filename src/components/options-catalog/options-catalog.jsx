@@ -20,11 +20,11 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { BookUp2Icon, PencilIcon, Trash2Icon } from "lucide-react";
+import { BookUp2Icon, InfoIcon, PencilIcon, Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RentForm } from "@/components/rent-modal";
-import BookForm from "@/components/book-form";
-import BookDeleteConfirmation from "@/components/book-delete-confirmation";
+import BookForm from "@/components/options-catalog/edit-form";
+import BookDeleteConfirmation from "@/components/options-catalog/delete-confirmation";
 
 import { useState } from "react";
 import { useSWRConfig } from "swr";
@@ -33,6 +33,7 @@ import { toast } from "sonner";
 
 const titles = {
   rent: "Rent a book",
+  status: "Book status",
   edit: "Edit book",
   delete: "Delete book",
 };
@@ -157,6 +158,10 @@ function BookOptionsDropdown({ children, setCategory, rentAvailable }) {
         >
           <BookUp2Icon className="mr-2 h-4 w-4" />
           <span>Rent</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setCategory("status")}>
+          <InfoIcon className="mr-2 h-4 w-4" />
+          <span>Status</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setCategory("edit")}>
           <PencilIcon className="mr-2 h-4 w-4" />

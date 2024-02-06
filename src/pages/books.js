@@ -1,7 +1,8 @@
+import { SWRConfig } from "swr";
+import BooksReturns from "@/components/books-returns";
+
 import { getSession } from "next-auth/react";
 import prisma from "@/lib/prisma";
-import BooksReturns from "@/components/books-returns";
-import { SWRConfig } from "swr";
 
 export default function Books({ userStr }) {
   const user = JSON.parse(userStr);

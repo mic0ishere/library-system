@@ -1,4 +1,3 @@
-import Link from "next/link";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -7,6 +6,7 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { ThemeToggle } from "@/components/theme-toggle";
+import Link from "next/link";
 import { signOut } from "next-auth/react";
 
 function Navbar() {

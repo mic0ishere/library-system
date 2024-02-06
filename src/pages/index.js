@@ -1,14 +1,3 @@
-import BookAlerts from "@/components/book-alerts";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import isAdmin from "@/lib/is-admin";
-import prisma from "@/lib/prisma";
 import {
   BookCheck,
   FolderOpen,
@@ -16,8 +5,20 @@ import {
   LockKeyhole,
   Users,
 } from "lucide-react";
-import { getSession } from "next-auth/react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import BookAlerts from "@/components/overdue-alerts";
 import Link from "next/link";
+
+import { getSession } from "next-auth/react";
+import prisma from "@/lib/prisma";
+import isAdmin from "@/lib/is-admin";
 
 export default function Home({ user, isAdmin, booksStr }) {
   const books = JSON.parse(booksStr);
