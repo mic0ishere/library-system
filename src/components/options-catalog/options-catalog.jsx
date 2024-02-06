@@ -251,7 +251,7 @@ async function statusUpdate(id, data) {
   try {
     const response = await (
       await fetch(`/api/catalog/${id}`, {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },

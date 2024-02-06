@@ -43,7 +43,9 @@ import { statuses } from "@/components/constants";
 import { cn } from "@/lib/utils";
 
 const statusChangeWarnings = {
+  // new status to be set
   AVAILABLE: {
+    // previous statuses that will trigger the warning
     type: ["RENTED"],
     message:
       "The book will be marked as if it was just returned and confirmed to be available.",

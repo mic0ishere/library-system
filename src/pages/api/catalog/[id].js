@@ -46,14 +46,24 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (req.method === "POST") {
+  if (req.method === "PATCH") {
     const { status, userId = null } = data;
+
+    if (book.status === status) {
+      res.status(200).json({
+        message: `Book is already ${status}`,
+        type: "error",
+      });
+      return;
+    }
 
     try {
       if (
-        book.status === "RENTED" &&
-        ["AVAILABLE", "NOT_AVAILABLE"].includes(status)
+        ["AVAILABLE", "NOT_AVAILABLE"].includes(status) &&
+        book.status === "RENTED"
       ) {
+        const previousRental = book.rentals[book.rentals.length - 1];
+
         const returnedAt = new Date();
         await prisma.book.update({
           where: {
@@ -70,8 +80,8 @@ export default async function handler(req, res) {
                 where: {
                   unique_rental: {
                     bookId: book.id,
-                    userId: book.rentals[book.rentals.length - 1].userId,
-                    rentedAt: book.rentals[book.rentals.length - 1].rentedAt,
+                    userId: previousRental.userId,
+                    rentedAt: previousRental.rentedAt,
                   },
                 },
                 data: {
