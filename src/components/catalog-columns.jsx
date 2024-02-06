@@ -18,7 +18,7 @@ import RentModal from "@/components/rent-modal";
 
 import { statuses } from "@/components/constants";
 
-export const columns = (isAdmin) => [
+export const columns = (isAdmin, adminProps) => [
   {
     accessorKey: "author",
     header: "Author",
@@ -104,7 +104,7 @@ export const columns = (isAdmin) => [
       if (isAdmin)
         return (
           <div className="w-24">
-            <BookOptions row={row.original} rent={rent}>
+            <BookOptions row={row.original} rent={rent} adminProps={adminProps}>
               <Button size="sm" variant="secondary" className="-my-2">
                 Options <MenuIcon className="w-4 h-4 ml-2" />
               </Button>

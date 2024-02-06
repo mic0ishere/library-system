@@ -34,12 +34,12 @@ import StatusInformation from "./status-information";
 
 const titles = {
   rent: "Rent a book",
-  status: "Renting status",
+  status: "Rental status",
   edit: "Edit book",
   delete: "Delete book",
 };
 
-function BookOptions({ row, rent, children }) {
+function BookOptions({ row, rent, adminProps, children }) {
   const { mutate } = useSWRConfig();
 
   const [open, setOpen] = useState(false);
@@ -108,7 +108,7 @@ function BookOptions({ row, rent, children }) {
               </DialogClose>
             </>
           )}
-          {categoryOpen == "status" && <StatusInformation row={row} />}
+          {categoryOpen == "status" && <StatusInformation row={row} users={adminProps?.users ?? []} />}
         </DialogContent>
       </Dialog>
     );
@@ -138,7 +138,7 @@ function BookOptions({ row, rent, children }) {
           {categoryOpen === "delete" && (
             <BookDeleteConfirmation row={row} onSubmit={onBookDelete} />
           )}
-          {categoryOpen == "status" && <StatusInformation row={row} />}
+          {categoryOpen == "status" && <StatusInformation row={row} users={adminProps?.users ?? []} />}
         </DrawerHeader>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>

@@ -12,14 +12,37 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  SELECT_TRIGGER_CLASS,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Check, ChevronsUpDown } from "lucide-react";
 
-import { useEffect } from "react";
+import { useState } from "react";
 import useSWR from "swr";
-import { Badge } from "../ui/badge";
-import { statuses } from "../constants";
+import { statuses } from "@/components/constants";
+import { cn } from "@/lib/utils";
 
-function StatusInformation({ row }) {
+function StatusInformation({ row, users = [] }) {
   const {
     data: book,
     isLoading,
@@ -28,19 +51,19 @@ function StatusInformation({ row }) {
     fetch(...args).then((res) => res.json())
   );
 
-  useEffect(() => {
-    console.log(book, book?.rentals);
-  }, [book]);
+  const initialStatus = statuses.find((status) => status.value === row.status);
+  const [status, setStatus] = useState(row.status);
 
-  const status = statuses.find((status) => status.value === row.status);
+  const [openUser, setOpenUser] = useState(false);
+  const [selectedUser, setUser] = useState("");
 
   return (
     <div className="overflow-auto">
       <h1 className="text-2xl font-bold">{row.title}</h1>
       <p className="text-lg mb-2">{row.author}</p>
-      <Badge className="mb-2">{status.label}</Badge>
+      <Badge className="mb-2">{initialStatus.label}</Badge>
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="mb-2">
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{error.message}</AlertDescription>
         </Alert>
@@ -48,7 +71,7 @@ function StatusInformation({ row }) {
       <Accordion type="single" collapsible>
         <AccordionItem value="previous-rentals" className="border-b-0">
           <AccordionTrigger>Previous rentals</AccordionTrigger>
-          <AccordionContent className="p-0">
+          <AccordionContent className="p-0 pb-4">
             <Table maxHeight="30vh">
               <TableHeader>
                 <TableRow>
@@ -123,6 +146,82 @@ function StatusInformation({ row }) {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
+      <div>
+        <h2 className="text-xl font-bold mb-2">Change status</h2>
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <Select
+            onValueChange={(newStatus) => setStatus(newStatus)}
+            defaultValue={status}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {statuses.map((status) => (
+                <SelectItem key={status.value} value={status.value}>
+                  <div className="flex items-center gap-2">
+                    {status.icon && (
+                      <status.icon className="h-4 w-4 text-muted-foreground" />
+                    )}
+                    {status.label} {status.value === row.status && "(current)"}
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Popover open={openUser} onOpenChange={setOpenUser}>
+            <PopoverTrigger asChild>
+              {status !== initialStatus.value && status === "RENTED" && (
+                <button
+                  variant="outline"
+                  role="combobox"
+                  aria-controls="user-select"
+                  aria-expanded={open}
+                  className={SELECT_TRIGGER_CLASS}
+                >
+                  {selectedUser
+                    ? users.find((user) => user.value === selectedUser)?.label
+                    : "Select user..."}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </button>
+              )}
+            </PopoverTrigger>
+            <PopoverContent className="w-full  p-0">
+              <Command>
+                <CommandInput placeholder="Search users..." />
+                <CommandEmpty>No user found.</CommandEmpty>
+                <CommandGroup>
+                  {users.map((user) => (
+                    <CommandItem
+                      key={user.value}
+                      value={user.value}
+                      onSelect={(newUser) => {
+                        setUser(newUser === selectedUser ? "" : newUser);
+                        setOpenUser(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          "mr-2 h-4 w-4",
+                          user === user.value ? "opacity-100" : "opacity-0"
+                        )}
+                      />
+                      {user.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
+        <Button
+          className="w-full mt-4"
+          disabled={!selectedUser && status === "RENTED"}
+        >
+          Save
+        </Button>
+      </div>
     </div>
   );
 }

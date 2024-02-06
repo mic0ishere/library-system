@@ -7,10 +7,10 @@ import AddNewBookModal from "@/components/add-new-book";
 import { columns } from "@/components/catalog-columns";
 
 import { getSession } from "next-auth/react";
-import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
+import prisma from "@/lib/prisma";
 
-export default function Catalog({ booksStr, isAdmin }) {
+export default function Catalog({ booksStr, isAdmin, adminProps }) {
   return (
     <div className="w-full pt-8 pb-16 max-w-[900px]">
       {isAdmin ? (
@@ -50,7 +50,7 @@ export default function Catalog({ booksStr, isAdmin }) {
             </Button>
           </AddNewBookModal>
         )}
-        <BooksCatalog columns={columns(isAdmin)} />
+        <BooksCatalog columns={columns(isAdmin, JSON.parse(adminProps))} />
       </SWRConfig>
     </div>
   );
@@ -67,10 +67,30 @@ export async function getServerSideProps(context) {
 
   const books = await prisma.book.findMany();
 
+  const admin = isAdmin(session.user.email);
+  if (!admin) {
+    return {
+      props: {
+        isAdmin: false,
+        booksStr: JSON.stringify(books),
+      },
+    };
+  }
+
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+
   return {
     props: {
+      isAdmin: true,
       booksStr: JSON.stringify(books),
-      isAdmin: isAdmin(session.user.email),
+      adminProps: JSON.stringify({
+        users: users.map((user) => ({ value: user.id, label: user.name })),
+      }),
     },
   };
 }
