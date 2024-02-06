@@ -44,20 +44,34 @@ export default async function handler(req, res) {
       return;
     }
 
+    const dueDate = new Date(
+      new Date().setDate(
+        new Date().getDate() + process.env.NEXT_PUBLIC_DEFAULTDEPOSITTIME
+      )
+    );
+
     await prisma.book.update({
       where: {
         id: bookId,
       },
       data: {
         status: "RENTED",
-        dueDate: new Date(
-          new Date().setDate(
-            new Date().getDate() + process.env.NEXT_PUBLIC_DEFAULTDEPOSITTIME
-          )
-        ),
+        rentedAt: new Date(),
+        dueDate: dueDate,
         rentedBy: {
           connect: {
             email: session.user.email,
+          },
+        },
+        rentals: {
+          create: {
+            rentedAt: new Date(),
+            dueDate: dueDate,
+            user: {
+              connect: {
+                email: session.user.email,
+              },
+            },
           },
         },
       },
@@ -97,9 +111,22 @@ export default async function handler(req, res) {
       data: {
         status: "BACK_SOON",
         returnedAt: new Date(),
-        previousRenterId: book.rentedBy.id,
         rentedBy: {
           disconnect: true,
+        },
+        rentals: {
+          update: {
+            where: {
+              unique_rental: {
+                bookId: book.id,
+                userId: book.rentedBy.id,
+                rentedAt: book.rentedAt,
+              },
+            },
+            data: {
+              returnedAt: new Date(),
+            },
+          },
         },
       },
     });

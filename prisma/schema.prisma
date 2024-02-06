@@ -39,32 +39,47 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  userId        String    @unique
+  id            String           @id @default(cuid())
+  userId        String           @unique
   name          String?
-  email         String?   @unique
+  email         String?          @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   books         Book[]
+  previousRents PreviousRental[]
 }
 
 model Book {
-  id               String     @id @default(cuid())
-  title            String
-  author           String
-  year             String
-  pages            Int
-  isbn             String
-  status           EnumStatus @default(AVAILABLE)
-  dueDate          DateTime?
-  returnedAt       DateTime?
-  previousRenterId String?
-  rentedById       String?
-  rentedBy         User?      @relation(fields: [rentedById], references: [id])
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  id         String           @id @default(cuid())
+  title      String
+  author     String
+  year       String
+  pages      Int
+  isbn       String
+  status     EnumStatus       @default(AVAILABLE)
+  rentedAt   DateTime?
+  dueDate    DateTime?
+  returnedAt DateTime?
+  rentals    PreviousRental[]
+  rentedById String?
+  rentedBy   User?            @relation(fields: [rentedById], references: [id])
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+}
+
+model PreviousRental {
+  id         String    @id @default(cuid())
+  bookId     String
+  userId     String
+  rentedAt   DateTime
+  dueDate    DateTime
+  returnedAt DateTime?
+  book       Book      @relation(fields: [bookId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
+
+  @@unique([bookId, userId, rentedAt], name: "unique_rental")
 }
 
 enum EnumStatus {
