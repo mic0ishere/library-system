@@ -30,7 +30,12 @@ import { useMediaQuery } from "@/lib/use-media-query";
 import { useSWRConfig } from "swr";
 import { toast } from "sonner";
 
-function BookReturnCard({ book, showReturn = true, showDetails = true }) {
+function BookReturnCard({
+  book,
+  children,
+  showReturn = true,
+  showDetails = true,
+}) {
   return (
     <Card
       className={`${
@@ -51,7 +56,7 @@ function BookReturnCard({ book, showReturn = true, showDetails = true }) {
         )}
       </CardHeader>
       <CardContent>
-        <p className={book.due < 0 && "text-red-500"}>
+        <p className={book.due < 0 ? "text-red-500" : ""}>
           <strong>Due date:</strong> {new Date(book.dueDate).toDateString()} (
           {book.due === 0
             ? "today"
@@ -65,6 +70,7 @@ function BookReturnCard({ book, showReturn = true, showDetails = true }) {
             </Button>
           </ReturnModal>
         )}
+        {children}
       </CardContent>
     </Card>
   );

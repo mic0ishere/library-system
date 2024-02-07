@@ -12,31 +12,29 @@ import dateDifference from "@/lib/date-difference";
 
 export default function ManageUser({ isAdmin, userStr }) {
   const [user, setUser] = useState(JSON.parse(userStr));
-  const rentedBooks = user.books
+
+  const [books, setBooks] = useState(user.books);
+
+  const rentedBooks = books
     .filter((book) => book.status === "RENTED")
     .map((book) => ({
       ...book,
       due: dateDifference(book.dueDate, Date.now()),
     }))
     .sort((a, b) => a.due - b.due);
-  const returnedBooks = user.books.filter(
-    (book) => book.status === "BACK_SOON"
-  );
+  const returnedBooks = books.filter((book) => book.status === "BACK_SOON");
   const overdueBooks = rentedBooks.filter((book) => book.due < 0);
 
-  async function banUser() {
+  async function updateData(route, onSuccess) {
     try {
       const response = await (
-        await fetch(`/api/users/ban?userId=${user.userId}`, {
+        await fetch(`/api/users${route}`, {
           method: "PATCH",
         })
       ).json();
 
       if (response.type === "success") {
-        setUser({
-          ...user,
-          isBanned: !user.isBanned,
-        });
+        onSuccess(response?.data);
         return response;
       } else {
         throw new Error(response.message);
@@ -85,13 +83,21 @@ export default function ManageUser({ isAdmin, userStr }) {
           onClick={(e) => {
             e.target.disabled = true;
 
-            toast.promise(banUser(), {
-              loading: `${user.isBanned ? "Unbanning" : "Banning"} ${
-                user.name
-              }..`,
-              success: (data) => data.message,
-              error: (data) => data.message,
-            });
+            toast.promise(
+              updateData(`/ban?userId=${user.userId}`, () =>
+                setUser({
+                  ...user,
+                  isBanned: !user.isBanned,
+                })
+              ),
+              {
+                loading: `${user.isBanned ? "Unbanning" : "Banning"} ${
+                  user.name
+                }...`,
+                success: (data) => data.message,
+                error: (data) => data.message,
+              }
+            );
 
             e.target.disabled = false;
           }}
@@ -114,7 +120,43 @@ export default function ManageUser({ isAdmin, userStr }) {
               book={book}
               showDetails={false}
               showReturn={false}
-            />
+            >
+              <Button
+                variant="outline"
+                className="w-full mt-4"
+                onClick={(e) => {
+                  e.target.disabled = true;
+
+                  toast.promise(
+                    updateData(`/prolongate?bookId=${book.id}`, (data) =>
+                      setBooks(
+                        books.map((b) =>
+                          b.id === book.id
+                            ? {
+                                ...b,
+                                dueDate: new Date(data.newDueDate),
+                                due: dateDifference(
+                                  data.newDueDate,
+                                  Date.now()
+                                ),
+                              }
+                            : b
+                        )
+                      )
+                    ),
+                    {
+                      loading: `Prolongating ${book.title}...`,
+                      success: (data) => data.message,
+                      error: (data) => data.message,
+                    }
+                  );
+
+                  e.target.disabled = false;
+                }}
+              >
+                Prolongate (+{process.env.NEXT_PUBLIC_PROLONGATIONTIME} days)
+              </Button>
+            </BookReturnCard>
           ))}
         {rentedBooks.length === 0 && (
           <p className="text-lg text-neutral-500 mb-8">No rented books</p>
@@ -130,7 +172,7 @@ export default function ManageUser({ isAdmin, userStr }) {
               key={book.id}
               book={book}
               showUser={false}
-              setBooks={(book) => setUser({ ...user, books: book })}
+              setBooks={(books) => setBooks(books)}
               books={returnedBooks}
             />
           ))}
