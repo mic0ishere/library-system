@@ -196,7 +196,6 @@ function StatusInformation({ row, users = [], onSubmit }) {
             <PopoverTrigger asChild>
               {status === "RENTED" && (
                 <button
-                  variant="outline"
                   role="combobox"
                   aria-controls="user-select"
                   aria-expanded={openUser}
