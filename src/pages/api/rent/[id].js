@@ -51,7 +51,7 @@ export default async function handler(req, res) {
 
     const rentedBooks = user.books.filter((book) => book.status === "RENTED");
 
-    if (rentedBooks.length >= process.env.NEXT_PUBLIC_MAXDEPOSITS) {
+    if (rentedBooks.length >= process.env.NEXT_PUBLIC_MAXRENTALS) {
       res.status(200).json({
         message: `You have reached the maximum number of rented books. Please return a book to rent another one.`,
         type: "error",
@@ -61,7 +61,7 @@ export default async function handler(req, res) {
 
     const dueDate = new Date(
       new Date().setDate(
-        new Date().getDate() + process.env.NEXT_PUBLIC_DEFAULTDEPOSITTIME
+        new Date().getDate() + process.env.NEXT_PUBLIC_DEFAULTRENTALTIME
       )
     );
 

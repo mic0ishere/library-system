@@ -79,7 +79,7 @@ function RentForm({ row, open }) {
         <AlertDescription>
           After taking the book from the bookshelf, click the button below to
           confirm the rent. The book will be marked as rented and you will have{" "}
-          {process.env.NEXT_PUBLIC_DEFAULTDEPOSITTIME} days to return it.
+          {process.env.NEXT_PUBLIC_DEFAULTRENTALTIME} days to return it.
         </AlertDescription>
       </Alert>
 

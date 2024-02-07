@@ -22,7 +22,7 @@ function BooksReturns() {
       <p className="mt-2 mb-4">
         You are currently renting{" "}
         <strong>
-          {books.length}/{process.env.NEXT_PUBLIC_MAXDEPOSITS}
+          {books.length}/{process.env.NEXT_PUBLIC_MAXRENTALS}
         </strong>{" "}
         books. You can return them at any time by clicking the return button
         below.

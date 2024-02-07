@@ -1,3 +1,4 @@
 _admins: [] # _ is a prefix for private variables
-maxDeposits: 10
-defaultDepositTime: 7 # days
+maxRentals: 10
+defaultRentalTime: 7 # days
+prolongationTime: 7 # days

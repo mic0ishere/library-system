@@ -155,7 +155,7 @@ export default async function handler(req, res) {
 
         const dueDate = new Date(
           new Date().setDate(
-            new Date().getDate() + process.env.NEXT_PUBLIC_DEFAULTDEPOSITTIME
+            new Date().getDate() + process.env.NEXT_PUBLIC_DEFAULTRENTALTIME
           )
         );
 
