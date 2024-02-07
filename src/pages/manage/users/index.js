@@ -27,22 +27,12 @@ import isAdmin from "@/lib/is-admin";
 import prisma from "@/lib/prisma";
 import dateDifference from "@/lib/date-difference";
 import { useRouter } from "next/router";
+import formatEmail from "@/lib/format-email";
 
 export default function ManageUsers({ usersStr }) {
   const users = JSON.parse(usersStr);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-
-  function formatEmail(u) {
-    const emailArr = u.email.split(".");
-    const domain = emailArr.pop();
-    const parsedEmail =
-      emailArr.join(".\u200B").replaceAll("@", "@\u200B") + "." + domain;
-    return {
-      ...u,
-      parsedEmail,
-    };
-  }
 
   return (
     <div className="w-full pt-8 pb-16 max-w-[900px]">
@@ -111,7 +101,7 @@ export default function ManageUsers({ usersStr }) {
                 <div className="grid grid-cols-2 w-full items-center justify-center">
                   <div>
                     <h1 className="text-2xl font-bold">{user.books.length}</h1>
-                    <p className="text-sm text-neutral-600">Rented</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">Rented</p>
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold">
@@ -121,7 +111,7 @@ export default function ManageUsers({ usersStr }) {
                         ).length
                       }
                     </h1>
-                    <p className="text-sm text-neutral-600">Overdue</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">Overdue</p>
                   </div>
                 </div>
                 <Link href={`/manage/users/${user.userId}`}>
