@@ -199,7 +199,7 @@ function StatusInformation({ row, users = [], onSubmit }) {
                   variant="outline"
                   role="combobox"
                   aria-controls="user-select"
-                  aria-expanded={open}
+                  aria-expanded={openUser}
                   disabled={status === initialStatus.value}
                   className={SELECT_TRIGGER_CLASS}
                 >
