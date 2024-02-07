@@ -9,9 +9,9 @@ import Link from "next/link";
 
 function BookAlerts({ books = [], showCatalog = true }) {
   const overdue = books
-    .filter((book) => book.due <= 0)
+    .filter((book) => book.due < 0)
     .sort((a, b) => a.due - b.due);
-  const dueSoon = books.filter((book) => book.due <= 3 && book.due > 0);
+  const dueSoon = books.filter((book) => book.due <= 3 && book.due >= 0);
 
   if (overdue.length === 1) {
     return (

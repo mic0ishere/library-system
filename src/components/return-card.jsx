@@ -30,37 +30,41 @@ import { useMediaQuery } from "@/lib/use-media-query";
 import { useSWRConfig } from "swr";
 import { toast } from "sonner";
 
-function BookReturnCard({ book }) {
+function BookReturnCard({ book, showReturn = true, showDetails = true }) {
   return (
     <Card
       className={`${
-        book.due <= 0
-          ? "ring-2 ring-red-500 dark:ring-red-900"
+        book.due < 0
+          ? "ring-2 ring-red-500 dark:ring-red-800"
           : book.due <= 3 && "ring-2 ring-yellow-500"
       }`}
     >
       <CardHeader>
         <CardTitle>{book.title}</CardTitle>
         <CardDescription>{book.author}</CardDescription>
-        <ul className="text-sm text-left mt-2 ml-4 list-disc text-black dark:text-white">
-          <li>Published: {book.year}</li>
-          <li>Pages: {book.pages}</li>
-          <li>ISBN: {book.isbn}</li>
-        </ul>
+        {showDetails && (
+          <ul className="text-sm text-left mt-2 ml-4 list-disc text-black dark:text-white">
+            <li>Published: {book.year}</li>
+            <li>Pages: {book.pages}</li>
+            <li>ISBN: {book.isbn}</li>
+          </ul>
+        )}
       </CardHeader>
       <CardContent>
-        <p className={book.due <= 0 && "text-red-500"}>
+        <p className={book.due < 0 && "text-red-500"}>
           <strong>Due date:</strong> {new Date(book.dueDate).toDateString()} (
           {book.due === 0
             ? "today"
             : new Intl.RelativeTimeFormat("en").format(book.due, "day")}
           )
         </p>
-        <ReturnModal book={book}>
-          <Button variant="outline" className="w-full mt-4">
-            Return
-          </Button>
-        </ReturnModal>
+        {showReturn && (
+          <ReturnModal book={book}>
+            <Button variant="outline" className="w-full mt-4">
+              Return
+            </Button>
+          </ReturnModal>
+        )}
       </CardContent>
     </Card>
   );

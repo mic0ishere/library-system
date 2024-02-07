@@ -16,9 +16,10 @@ export default async function handler(req, res) {
   }
 
   if (req.method === "GET") {
-    const { type, bookId = null } = req.query;
+    const { type } = req.query;
 
     if (type === "book") {
+      const { bookId } = req.query;
       if (!bookId) {
         res.status(400).json({
           message: "Book ID is required.",
@@ -42,9 +43,10 @@ export default async function handler(req, res) {
 
       res.status(200).json(bookUsers);
     } else {
-      const users = await prisma.user.findMany({});
-
-      res.status(200).json(users);
+      res.status(400).json({
+        message: "Invalid type.",
+        type: "error",
+      });
     }
   } else {
     res.status(405).end();

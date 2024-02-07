@@ -46,7 +46,7 @@ function ReturnedBookCard({ book, showUser = true, setBooks, books }) {
         {showUser && (
           <CardDescription>
             <span className="font-semibold">Rented by:</span>{" "}
-            {book.rentedBy.name}
+            {book?.rentedBy?.name || "Unknown user"}
           </CardDescription>
         )}
         <ul className="text-sm ml-4 md:list-disc">
@@ -81,11 +81,13 @@ function ReturnedBookCard({ book, showUser = true, setBooks, books }) {
         >
           Confirm return
         </Button>
-        <Link href={`/manage/users/${book.rentedBy.userId}`}>
-          <Button className="w-full mt-2" variant="outline" size="sm">
-            View user <ExternalLinkIcon className="ml-1 h-4 w-4" />
-          </Button>
-        </Link>
+        {showUser && (
+          <Link href={`/manage/users/${book?.rentedBy?.userId || ""}`}>
+            <Button className="w-full mt-2" variant="outline" size="sm">
+              View user <ExternalLinkIcon className="ml-1 h-4 w-4" />
+            </Button>
+          </Link>
+        )}
       </CardContent>
     </Card>
   );
