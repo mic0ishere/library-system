@@ -194,16 +194,21 @@ function StatusInformation({ row, users = [], onSubmit }) {
 
           <Popover open={openUser} onOpenChange={setOpenUser}>
             <PopoverTrigger asChild>
-              {status !== initialStatus.value && status === "RENTED" && (
+              {status === "RENTED" && (
                 <button
                   variant="outline"
                   role="combobox"
                   aria-controls="user-select"
                   aria-expanded={open}
+                  disabled={status === initialStatus.value}
                   className={SELECT_TRIGGER_CLASS}
                 >
-                  {selectedUser
-                    ? users.find((user) => user.value === selectedUser)?.label
+                  {selectedUser || initialStatus.value === "RENTED"
+                    ? users.find((user) =>
+                        status === initialStatus.value
+                          ? user.value === row.rentedById
+                          : user.value === selectedUser
+                      )?.label
                     : "Select user..."}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </button>
