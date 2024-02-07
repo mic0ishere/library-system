@@ -96,46 +96,42 @@ export default function ManageUsers({ usersStr }) {
       </Popover>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full mt-2">
         {users.length > 0 &&
-          [...users, ...users, ...users, ...users, ...users, ...users, ...users]
-            .map(formatEmail)
-            .map((user) => (
-              <Card
-                key={user.userId}
-                className="h-full flex flex-col justify-between"
-              >
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-xl">{user.name}</CardTitle>
-                  <CardDescription className="break-normal text-xs">
-                    {user.parsedEmail}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 w-full items-center justify-center">
-                    <div>
-                      <h1 className="text-2xl font-bold">
-                        {user.books.length}
-                      </h1>
-                      <p className="text-sm text-neutral-600">Rented</p>
-                    </div>
-                    <div>
-                      <h1 className="text-2xl font-bold">
-                        {
-                          user.books.filter(
-                            (b) => dateDifference(Date.now(), b.dueDate) > 0
-                          ).length
-                        }
-                      </h1>
-                      <p className="text-sm text-neutral-600">Overdue</p>
-                    </div>
+          users.map(formatEmail).map((user) => (
+            <Card
+              key={user.userId}
+              className="h-full flex flex-col justify-between"
+            >
+              <CardHeader className="pb-3">
+                <CardTitle className="text-xl">{user.name}</CardTitle>
+                <CardDescription className="break-normal text-xs">
+                  {user.parsedEmail}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 w-full items-center justify-center">
+                  <div>
+                    <h1 className="text-2xl font-bold">{user.books.length}</h1>
+                    <p className="text-sm text-neutral-600">Rented</p>
                   </div>
-                  <Link href={`/manage/users/${user.userId}`}>
-                    <Button className="w-full mt-2" variant="outline" size="sm">
-                      View user <ExternalLinkIcon className="ml-1 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
+                  <div>
+                    <h1 className="text-2xl font-bold">
+                      {
+                        user.books.filter(
+                          (b) => dateDifference(Date.now(), b.dueDate) > 0
+                        ).length
+                      }
+                    </h1>
+                    <p className="text-sm text-neutral-600">Overdue</p>
+                  </div>
+                </div>
+                <Link href={`/manage/users/${user.userId}`}>
+                  <Button className="w-full mt-2" variant="outline" size="sm">
+                    View user <ExternalLinkIcon className="ml-1 h-4 w-4" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
       </div>
     </div>
   );
