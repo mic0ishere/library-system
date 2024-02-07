@@ -66,7 +66,7 @@ function BookReturnCard({
         {showReturn && (
           <ReturnModal book={book}>
             <Button variant="outline" className="w-full mt-4">
-              Return
+              Return book
             </Button>
           </ReturnModal>
         )}

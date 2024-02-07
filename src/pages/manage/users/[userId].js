@@ -9,6 +9,7 @@ import isAdmin from "@/lib/is-admin";
 import prisma from "@/lib/prisma";
 import { toast } from "sonner";
 import dateDifference from "@/lib/date-difference";
+import { BookCheckIcon, CalendarClockIcon, GavelIcon } from "lucide-react";
 
 export default function ManageUser({ isAdmin, userStr }) {
   const [user, setUser] = useState(JSON.parse(userStr));
@@ -25,11 +26,15 @@ export default function ManageUser({ isAdmin, userStr }) {
   const returnedBooks = books.filter((book) => book.status === "BACK_SOON");
   const overdueBooks = rentedBooks.filter((book) => book.due < 0);
 
-  async function updateData(route, onSuccess) {
+  async function updateData(route, onSuccess, body = {}) {
     try {
       const response = await (
-        await fetch(`/api/users${route}`, {
+        await fetch(route, {
           method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
         })
       ).json();
 
@@ -43,6 +48,66 @@ export default function ManageUser({ isAdmin, userStr }) {
       console.error("Error:", error);
       throw new Error(error.message || "An unexpected error occured");
     }
+  }
+
+  function onProlongateClick(e, book) {
+    e.target.disabled = true;
+
+    toast.promise(
+      updateData(`/api/users/prolongate?bookId=${book.id}`, (data) =>
+        setBooks(
+          books.map((b) =>
+            b.id === book.id
+              ? {
+                  ...b,
+                  dueDate: new Date(data.newDueDate),
+                  due: dateDifference(data.newDueDate, Date.now()),
+                }
+              : b
+          )
+        )
+      ),
+      {
+        loading: `Prolongating ${book.title}...`,
+        success: (data) => data.message,
+        error: (data) => data.message,
+      }
+    );
+
+    e.target.disabled = false;
+  }
+
+  function onReturnClick(e, book) {
+    e.target.disabled = true;
+
+    toast.promise(
+      updateData(
+        `/api/catalog/${book.id}`,
+        () => {
+          setBooks(
+            books.map((b) =>
+              b.id === book.id
+                ? {
+                    ...b,
+                    status: "BACK_SOON",
+                    returnedAt: new Date(),
+                  }
+                : b
+            )
+          );
+        },
+        {
+          status: "BACK_SOON",
+        }
+      ),
+      {
+        loading: `Returning ${book.title}...`,
+        success: (data) => data.message,
+        error: (data) => data.message,
+      }
+    );
+
+    e.target.disabled = false;
   }
 
   return (
@@ -78,13 +143,13 @@ export default function ManageUser({ isAdmin, userStr }) {
         </p>
         <Button
           variant="destructive"
-          className="mt-4 px-8"
+          className="mt-4 px-6"
           size="sm"
           onClick={(e) => {
             e.target.disabled = true;
 
             toast.promise(
-              updateData(`/ban?userId=${user.userId}`, () =>
+              updateData(`/api/users/ban?userId=${user.userId}`, () =>
                 setUser({
                   ...user,
                   isBanned: !user.isBanned,
@@ -102,6 +167,7 @@ export default function ManageUser({ isAdmin, userStr }) {
             e.target.disabled = false;
           }}
         >
+          <GavelIcon className="w-5 h-5 mr-2" />
           {user.isBanned ? "Unban" : "Ban"} user
         </Button>
       </div>
@@ -121,41 +187,24 @@ export default function ManageUser({ isAdmin, userStr }) {
               showDetails={false}
               showReturn={false}
             >
-              <Button
-                variant="outline"
-                className="w-full mt-4"
-                onClick={(e) => {
-                  e.target.disabled = true;
-
-                  toast.promise(
-                    updateData(`/prolongate?bookId=${book.id}`, (data) =>
-                      setBooks(
-                        books.map((b) =>
-                          b.id === book.id
-                            ? {
-                                ...b,
-                                dueDate: new Date(data.newDueDate),
-                                due: dateDifference(
-                                  data.newDueDate,
-                                  Date.now()
-                                ),
-                              }
-                            : b
-                        )
-                      )
-                    ),
-                    {
-                      loading: `Prolongating ${book.title}...`,
-                      success: (data) => data.message,
-                      error: (data) => data.message,
-                    }
-                  );
-
-                  e.target.disabled = false;
-                }}
-              >
-                Prolongate (+{process.env.NEXT_PUBLIC_PROLONGATIONTIME} days)
-              </Button>
+              <div className="flex flex-col sm:flex-row md:flex-col xl:flex-row gap-2 items-center justify-between mt-4">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={(e) => onProlongateClick(e, book)}
+                >
+                  Prolongate by {process.env.NEXT_PUBLIC_PROLONGATIONTIME} days
+                  <CalendarClockIcon className="w-5 h-5 ml-2" />
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={(e) => onReturnClick(e, book)}
+                >
+                  Return book
+                  <BookCheckIcon className="w-5 h-5 ml-2" />
+                </Button>
+              </div>
             </BookReturnCard>
           ))}
         {rentedBooks.length === 0 && (
@@ -172,8 +221,8 @@ export default function ManageUser({ isAdmin, userStr }) {
               key={book.id}
               book={book}
               showUser={false}
-              setBooks={(books) => setBooks(books)}
-              books={returnedBooks}
+              setBooks={setBooks}
+              books={books}
             />
           ))}
         {returnedBooks.length === 0 && (
