@@ -25,12 +25,12 @@ import { Button } from "@/components/ui/button";
 import { RentForm } from "@/components/rent-modal";
 import BookForm from "@/components/options-catalog/edit-form";
 import BookDeleteConfirmation from "@/components/options-catalog/delete-confirmation";
+import StatusInformation from "@/components/options-catalog/status-information";
 
 import { useState } from "react";
 import { useSWRConfig } from "swr";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { toast } from "sonner";
-import StatusInformation from "./status-information";
 
 const titles = {
   rent: "Rent a book",

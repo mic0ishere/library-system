@@ -1,12 +1,4 @@
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -36,12 +28,12 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, ChevronsUpDown, InfoIcon } from "lucide-react";
+import PreviousRentalsTable from "@/components/previous-rentals-table";
 
 import { useState } from "react";
 import useSWR from "swr";
 import { statuses } from "@/components/constants";
 import { cn } from "@/lib/utils";
-import dateDifference from "@/lib/date-difference";
 
 const statusChangeWarnings = {
   // new status to be set
@@ -98,73 +90,11 @@ function StatusInformation({ row, users = [], onSubmit }) {
         <AccordionItem value="previous-rentals" className="border-b-0">
           <AccordionTrigger>Previous rentals</AccordionTrigger>
           <AccordionContent className="p-0 pb-4">
-            <Table maxHeight="30vh">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="h-10">User</TableHead>
-                  <TableHead className="h-10 w-[100px]">Rented</TableHead>
-                  <TableHead className="h-10 w-[100px]">Returned</TableHead>
-                  <TableHead className="h-10 w-[100px] text-right">
-                    Due date
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {book?.rentals?.length > 0 ? (
-                  book?.rentals
-                    ?.sort(
-                      (a, b) => new Date(b.rentedAt) - new Date(a.rentedAt)
-                    )
-                    .map((rental) => (
-                      <TableRow key={rental.id}>
-                        <TableCell className="font-medium text-left whitespace-nowrap">
-                          {rental.user.name}
-                        </TableCell>
-                        <TableCell>
-                          {new Date(rental.rentedAt).toLocaleDateString()}
-                        </TableCell>
-                        {rental.returnedAt ? (
-                          <TableCell
-                            className={
-                              dateDifference(
-                                rental.returnedAt,
-                                rental.dueDate
-                              ) > 0 &&
-                              "text-red-600 dark:text-red-400 font-semibold"
-                            }
-                          >
-                            {new Date(rental.returnedAt).toLocaleDateString()}
-                          </TableCell>
-                        ) : (
-                          <TableCell
-                            className={
-                              dateDifference(rental.dueDate, Date.now()) < 0 &&
-                              "text-red-600 dark:text-red-400 font-semibold"
-                            }
-                          >
-                            {dateDifference(rental.dueDate, Date.now()) < 0
-                              ? "Overdue"
-                              : "Rented"}
-                          </TableCell>
-                        )}
-
-                        <TableCell className="text-right">
-                          {new Date(rental.dueDate).toLocaleDateString()}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-center">
-                      {!isLoading &&
-                        book?.rentals?.length === 0 &&
-                        "No previous rentals found"}
-                      {isLoading && "Loading..."}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+            <PreviousRentalsTable
+              book={book}
+              isLoading={isLoading}
+              maxHeight="30vh"
+            />
           </AccordionContent>
         </AccordionItem>
       </Accordion>
