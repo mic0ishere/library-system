@@ -32,6 +32,7 @@ export default async function handler(req, res) {
         email: session.user.email,
       },
       select: {
+        isBanned: true,
         books: {
           select: {
             status: true,
@@ -39,6 +40,14 @@ export default async function handler(req, res) {
         },
       },
     });
+
+    if (user.isBanned) {
+      res.status(200).json({
+        message: `You are banned from renting books. Please contact an admin for more information.`,
+        type: "error",
+      });
+      return;
+    }
 
     const rentedBooks = user.books.filter((book) => book.status === "RENTED");
 

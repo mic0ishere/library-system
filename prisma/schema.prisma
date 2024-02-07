@@ -39,16 +39,18 @@ model Session {
 }
 
 model User {
-  id            String           @id @default(cuid())
-  userId        String           @unique
-  name          String?
-  email         String?          @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  books         Book[]
-  previousRents PreviousRental[]
+  id              String           @id @default(cuid())
+  userId          String           @unique
+  name            String?
+  email           String?          @unique
+  emailVerified   DateTime?
+  image           String?
+  createdAt       DateTime         @default(now())
+  isBanned        Boolean          @default(false)
+  accounts        Account[]
+  sessions        Session[]
+  books           Book[]
+  previousRentals PreviousRental[]
 }
 
 model Book {
