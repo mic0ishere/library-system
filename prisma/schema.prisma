@@ -78,8 +78,8 @@ model PreviousRental {
   rentedAt   DateTime
   dueDate    DateTime
   returnedAt DateTime?
-  book       Book      @relation(fields: [bookId], references: [id])
-  user       User      @relation(fields: [userId], references: [id])
+  book       Book      @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([bookId, userId, rentedAt], name: "unique_rental")
 }
