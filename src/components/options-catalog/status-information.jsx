@@ -91,7 +91,7 @@ function StatusInformation({ row, users = [], onSubmit }) {
           <AccordionTrigger>Previous rentals</AccordionTrigger>
           <AccordionContent className="p-0 pb-4">
             <PreviousRentalsTable
-              book={book}
+              rentals={book?.rentals || []}
               isLoading={isLoading}
               maxHeight="30vh"
             />

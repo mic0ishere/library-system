@@ -10,6 +10,7 @@ import prisma from "@/lib/prisma";
 import { toast } from "sonner";
 import dateDifference from "@/lib/date-difference";
 import { BookCheckIcon, CalendarClockIcon, GavelIcon } from "lucide-react";
+import PreviousRentalsTable from "@/components/previous-rentals-table";
 
 export default function ManageUser({ isAdmin, userStr }) {
   const [user, setUser] = useState(JSON.parse(userStr));
@@ -221,7 +222,27 @@ export default function ManageUser({ isAdmin, userStr }) {
               key={book.id}
               book={book}
               showUser={false}
-              setBooks={setBooks}
+              setBooks={() => {
+                setBooks(books.filter((b) => b.id !== book.id));
+
+                const previousRentals = user.previousRentals.map((rental) => {
+                  if (
+                    rental.bookId === book.id &&
+                    rental.rentedAt === book.rentedAt
+                  ) {
+                    return {
+                      ...rental,
+                      returnedAt: new Date(),
+                    };
+                  }
+                  return rental;
+                });
+
+                setUser({
+                  ...user,
+                  previousRentals,
+                });
+              }}
               books={books}
             />
           ))}
@@ -229,6 +250,10 @@ export default function ManageUser({ isAdmin, userStr }) {
           <p className="text-lg text-neutral-500 mb-8">No returned books</p>
         )}
       </div>
+      <h2 className="text-2xl mt-12">
+        Previous rentals ({user.previousRentals.length})
+      </h2>
+      <PreviousRentalsTable rentals={user.previousRentals} isUser />
     </div>
   );
 }
@@ -253,7 +278,20 @@ export async function getServerSideProps({ req, res, params: { userId } }) {
       isBanned: true,
       createdAt: true,
       books: true,
-      previousRentals: true,
+      previousRentals: {
+        select: {
+          bookId: true,
+          rentedAt: true,
+          dueDate: true,
+          returnedAt: true,
+          book: {
+            select: {
+              author: true,
+              title: true,
+            },
+          },
+        },
+      },
     },
   });
 

@@ -8,25 +8,39 @@ import {
 } from "@/components/ui/table";
 import dateDifference from "@/lib/date-difference";
 
-function PreviousRentalsTable({ book, isLoading, ...props }) {
+function PreviousRentalsTable({
+  rentals,
+  isLoading,
+  isUser = false,
+  ...props
+}) {
   return (
     <Table {...props}>
       <TableHeader>
         <TableRow>
-          <TableHead className="h-10">User</TableHead>
+          <TableHead className="h-10">{isUser ? "Book" : "User"}</TableHead>
           <TableHead className="h-10 w-[100px]">Rented</TableHead>
           <TableHead className="h-10 w-[100px]">Returned</TableHead>
           <TableHead className="h-10 w-[100px] text-right">Due date</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {book?.rentals?.length > 0 ? (
-          book?.rentals
+        {rentals?.length > 0 ? (
+          rentals
             ?.sort((a, b) => new Date(b.rentedAt) - new Date(a.rentedAt))
             .map((rental) => (
               <TableRow key={rental.id}>
                 <TableCell className="font-medium text-left whitespace-nowrap">
-                  {rental.user.name}
+                  {isUser ? (
+                    <>
+                      <span className="font-normal text-gray-500 dark:text-gray-400 mr-2">
+                        {rental?.book?.author}
+                      </span>
+                      {rental?.book?.title || "Unknown book"}
+                    </>
+                  ) : (
+                    rental?.user?.name || "Unknown user"
+                  )}
                 </TableCell>
                 <TableCell>
                   {new Date(rental.rentedAt).toLocaleDateString()}
@@ -62,7 +76,7 @@ function PreviousRentalsTable({ book, isLoading, ...props }) {
           <TableRow>
             <TableCell colSpan={4} className="text-center">
               {!isLoading &&
-                book?.rentals?.length === 0 &&
+                rentals?.length === 0 &&
                 "No previous rentals found"}
               {isLoading && "Loading..."}
             </TableCell>
