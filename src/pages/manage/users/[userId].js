@@ -250,10 +250,10 @@ export default function ManageUser({ isAdmin, userStr }) {
           <p className="text-lg text-neutral-500 mb-8">No returned books</p>
         )}
       </div>
-      <h2 className="text-2xl mt-12">
+      <h2 className="text-2xl mt-12 pb-4">
         Previous rentals ({user.previousRentals.length})
       </h2>
-      <PreviousRentalsTable rentals={user.previousRentals} isUser />
+      <PreviousRentalsTable maxHeight="80vh" rentals={user.previousRentals} isUser />
     </div>
   );
 }
