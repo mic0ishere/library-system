@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
-import dateDifference from "@/lib/date-difference";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -82,7 +81,7 @@ export default async function handler(req, res) {
       message: "Book has been prolonged successfully.",
       type: "success",
       data: {
-        newDueDate,
+        dueDate: newDueDate,
       },
     });
   } else {

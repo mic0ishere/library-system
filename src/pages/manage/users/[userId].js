@@ -1,16 +1,17 @@
+import { BookCheckIcon, CalendarClockIcon, GavelIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ReturnedBookCard from "@/components/returned-book-card";
 import BookReturnCard from "@/components/return-card";
+import PreviousRentalsTable from "@/components/previous-rentals-table";
 
 import { useState } from "react";
 import { getSession } from "next-auth/react";
 import isAdmin from "@/lib/is-admin";
 import prisma from "@/lib/prisma";
+
 import { toast } from "sonner";
 import dateDifference from "@/lib/date-difference";
-import { BookCheckIcon, CalendarClockIcon, GavelIcon } from "lucide-react";
-import PreviousRentalsTable from "@/components/previous-rentals-table";
 
 export default function ManageUser({ isAdmin, userStr }) {
   const [user, setUser] = useState(JSON.parse(userStr));
@@ -27,7 +28,27 @@ export default function ManageUser({ isAdmin, userStr }) {
   const returnedBooks = books.filter((book) => book.status === "BACK_SOON");
   const overdueBooks = rentedBooks.filter((book) => book.due < 0);
 
-  async function updateData(route, onSuccess, body = {}) {
+  async function swapBook(book) {
+    setBooks(books.map((b) => (b.id === book.id ? book : b)));
+  }
+
+  async function swapPreviousRental(book, updatedInfo) {
+    const previousRentals = user.previousRentals.map((rental) =>
+      rental.bookId === book.id && rental.rentedAt === book.rentedAt
+        ? {
+            ...rental,
+            ...updatedInfo,
+          }
+        : rental
+    );
+
+    setUser({
+      ...user,
+      previousRentals,
+    });
+  }
+
+  async function updateData(route, body = {}) {
     try {
       const response = await (
         await fetch(route, {
@@ -40,7 +61,6 @@ export default function ManageUser({ isAdmin, userStr }) {
       ).json();
 
       if (response.type === "success") {
-        onSuccess(response?.data);
         return response;
       } else {
         throw new Error(response.message);
@@ -54,61 +74,52 @@ export default function ManageUser({ isAdmin, userStr }) {
   function onProlongateClick(e, book) {
     e.target.disabled = true;
 
-    toast.promise(
-      updateData(`/api/users/prolongate?bookId=${book.id}`, (data) =>
-        setBooks(
-          books.map((b) =>
-            b.id === book.id
-              ? {
-                  ...b,
-                  dueDate: new Date(data.newDueDate),
-                  due: dateDifference(data.newDueDate, Date.now()),
-                }
-              : b
-          )
-        )
-      ),
-      {
-        loading: `Prolongating ${book.title}...`,
-        success: (data) => data.message,
-        error: (data) => data.message,
-      }
-    );
+    toast.promise(updateData(`/api/users/prolongate?bookId=${book.id}`), {
+      loading: `Prolongating ${book.title}...`,
+      success: (result) => {
+        swapBook({
+          ...book,
+          dueDate: new Date(result.data.dueDate),
+          due: dateDifference(result.data.dueDate, Date.now()),
+        });
 
-    e.target.disabled = false;
+        swapPreviousRental(book, {
+          dueDate: new Date(result.data.dueDate),
+        });
+
+        e.target.disabled = false;
+        return result.message;
+      },
+      error: (data) => data.message,
+    });
   }
 
   function onReturnClick(e, book) {
     e.target.disabled = true;
 
     toast.promise(
-      updateData(
-        `/api/catalog/${book.id}`,
-        () => {
-          setBooks(
-            books.map((b) =>
-              b.id === book.id
-                ? {
-                    ...b,
-                    status: "BACK_SOON",
-                    returnedAt: new Date(),
-                  }
-                : b
-            )
-          );
-        },
-        {
-          status: "BACK_SOON",
-        }
-      ),
+      updateData(`/api/catalog/${book.id}`, {
+        status: "BACK_SOON",
+      }),
       {
         loading: `Returning ${book.title}...`,
-        success: (data) => data.message,
+        success: (data) => {
+          swapBook({
+            ...book,
+            status: "BACK_SOON",
+            returnedAt: new Date(),
+          });
+
+          swapPreviousRental(book, {
+            returnedAt: new Date(),
+          });
+
+          e.target.disabled = false;
+          return data.message;
+        },
         error: (data) => data.message,
       }
     );
-
-    e.target.disabled = false;
   }
 
   return (
@@ -149,23 +160,20 @@ export default function ManageUser({ isAdmin, userStr }) {
           onClick={(e) => {
             e.target.disabled = true;
 
-            toast.promise(
-              updateData(`/api/users/ban?userId=${user.userId}`, () =>
+            toast.promise(updateData(`/api/users/ban?userId=${user.userId}`), {
+              loading: `${user.isBanned ? "Unbanning" : "Banning"} ${
+                user.name
+              }...`,
+              success: (data) => {
                 setUser({
                   ...user,
                   isBanned: !user.isBanned,
-                })
-              ),
-              {
-                loading: `${user.isBanned ? "Unbanning" : "Banning"} ${
-                  user.name
-                }...`,
-                success: (data) => data.message,
-                error: (data) => data.message,
-              }
-            );
-
-            e.target.disabled = false;
+                });
+                e.target.disabled = false;
+                return data.message;
+              },
+              error: (data) => data.message,
+            });
           }}
         >
           <GavelIcon className="w-5 h-5 mr-2" />
@@ -222,27 +230,7 @@ export default function ManageUser({ isAdmin, userStr }) {
               key={book.id}
               book={book}
               showUser={false}
-              setBooks={() => {
-                setBooks(books.filter((b) => b.id !== book.id));
-
-                const previousRentals = user.previousRentals.map((rental) => {
-                  if (
-                    rental.bookId === book.id &&
-                    rental.rentedAt === book.rentedAt
-                  ) {
-                    return {
-                      ...rental,
-                      returnedAt: new Date(),
-                    };
-                  }
-                  return rental;
-                });
-
-                setUser({
-                  ...user,
-                  previousRentals,
-                });
-              }}
+              setBooks={setBooks}
               books={books}
             />
           ))}
@@ -253,7 +241,11 @@ export default function ManageUser({ isAdmin, userStr }) {
       <h2 className="text-2xl mt-12 pb-4">
         Previous rentals ({user.previousRentals.length})
       </h2>
-      <PreviousRentalsTable maxHeight="80vh" rentals={user.previousRentals} isUser />
+      <PreviousRentalsTable
+        maxHeight="80vh"
+        rentals={user.previousRentals}
+        isUser
+      />
     </div>
   );
 }
