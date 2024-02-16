@@ -1,3 +1,4 @@
+_defaultLanguage: en
 _admins: [] # _ is a prefix for private variables
 maxRentals: 10
 defaultRentalTime: 7 # days

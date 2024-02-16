@@ -24,7 +24,9 @@ module.exports = async () => {
     ...nextConfig,
     i18n: {
       locales: ["en", ...langDirs],
-      defaultLocale: "en",
+      defaultLocale: langDirs.includes(configYaml._defaultLanguage)
+        ? configYaml._defaultLanguage
+        : "en",
     },
     env: {
       ...nextConfig.env,
