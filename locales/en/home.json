@@ -1,0 +1,13 @@
+{
+    "welcome": "Hello",
+    "catalog.title": "Catalog",
+    "catalog.description": "Browse and search through books from our collection and borrow one to read today.",
+    "books.title": "My books",
+    "books.description": "View and manage the books you have borrowed from our library and renew them if you need more time.",
+    "users.title": "Users",
+    "users.description": "View, search and manage the users of our library.",
+    "users.button": "Manage users",
+    "returns.title": "Book management",
+    "returns.button": "Manage returns",
+    "returns.catalog": "Modify book catalog"
+}

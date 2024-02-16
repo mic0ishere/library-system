@@ -20,13 +20,19 @@ import { getSession } from "next-auth/react";
 import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
 import dateDifference from "@/lib/date-difference";
+import useDictionary from "@/lib/use-translation";
+import { useEffect } from "react";
 
 export default function Home({ user, isAdmin, booksStr }) {
   const books = JSON.parse(booksStr);
 
+  const t = useDictionary("home");
+
   return (
     <div className="max-w-[600px] pt-8 pb-16">
-      <h1 className="text-4xl">Hello, {user.name ?? ""}</h1>
+      <h1 className="text-4xl">
+        {t("welcome")}, {user.name ?? ""}
+      </h1>
       <div className="flex justify-center w-full mt-6">
         <BookAlerts books={books} />
       </div>
@@ -35,11 +41,8 @@ export default function Home({ user, isAdmin, booksStr }) {
           <Link href="/catalog">
             <CardHeader>
               <FolderOpen />
-              <CardTitle>Catalog</CardTitle>
-              <CardDescription>
-                Browse and search through books from our collection and borrow
-                one to read today.
-              </CardDescription>
+              <CardTitle>{t("catalog.title")}</CardTitle>
+              <CardDescription>{t("catalog.description")}</CardDescription>
             </CardHeader>
           </Link>
         </Card>
@@ -47,11 +50,8 @@ export default function Home({ user, isAdmin, booksStr }) {
           <Link href="/books">
             <CardHeader>
               <LibraryBig />
-              <CardTitle>My books</CardTitle>
-              <CardDescription>
-                View and manage the books you have borrowed from our library and
-                renew them if you need more time.
-              </CardDescription>
+              <CardTitle>{t("books.title")}</CardTitle>
+              <CardDescription>{t("books.description")}</CardDescription>
             </CardHeader>
           </Link>
         </Card>
@@ -61,17 +61,15 @@ export default function Home({ user, isAdmin, booksStr }) {
               <CardHeader className="pb-4">
                 <Users />
                 <CardTitle>
-                  Users
+                  {t("users.title")}
                   <LockKeyhole className="inline h-3.5 w-3.5 ml-2" />
                 </CardTitle>
-                <CardDescription>
-                  View, search and manage the users of our library.
-                </CardDescription>
+                <CardDescription>{t("users.description")}</CardDescription>
               </CardHeader>
               <CardContent>
                 <Link href="/manage/users">
                   <Button className="w-full" variant="secondary" size="sm">
-                    Manage users
+                    {t("users.button")}
                   </Button>
                 </Link>
               </CardContent>
@@ -80,19 +78,19 @@ export default function Home({ user, isAdmin, booksStr }) {
               <CardHeader className="pb-4">
                 <BookCheck />
                 <CardTitle>
-                  Book management
+                  {t("returns.title")}
                   <LockKeyhole className="inline h-3.5 w-3.5 ml-2" />
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <Link href="/manage/returns">
                   <Button className="w-full" variant="secondary" size="sm">
-                    Manage returns
+                    {t("returns.button")}
                   </Button>
                 </Link>
                 <Link href="/catalog">
                   <Button className="w-full mt-2" variant="secondary" size="sm">
-                    Modify book catalog
+                    {t("returns.catalog")}
                   </Button>
                 </Link>
               </CardContent>

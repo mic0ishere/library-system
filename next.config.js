@@ -18,8 +18,14 @@ module.exports = async () => {
     ])
   );
 
+  const langDirs = (await fs.readdir("./locales")).filter((f) => f !== "en");
+
   return {
     ...nextConfig,
+    i18n: {
+      locales: ["en", ...langDirs],
+      defaultLocale: "en",
+    },
     env: {
       ...nextConfig.env,
       ...publicConfigYaml,

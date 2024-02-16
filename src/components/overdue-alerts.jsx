@@ -6,8 +6,11 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, Book } from "lucide-react";
 import Link from "next/link";
+import useDictionary from "@/lib/use-translation";
 
 function BookAlerts({ books = [], showCatalog = true }) {
+  const t = useDictionary("overdueAlerts");
+
   const overdue = books
     .filter((book) => book.due < 0)
     .sort((a, b) => a.due - b.due);
@@ -17,7 +20,9 @@ function BookAlerts({ books = [], showCatalog = true }) {
     return (
       <Alert variant="destructive">
         <AlertCircle className="w-6 h-6" />
-        <AlertTitle className="font-semibold">Overdue book</AlertTitle>
+        <AlertTitle className="font-semibold">
+          {t("overdue.one.title")}
+        </AlertTitle>
         <AlertDescription>
           <Tooltip>
             <TooltipTrigger className="underline underline-offset-1 decoration-dashed font-semibold">
@@ -25,27 +30,30 @@ function BookAlerts({ books = [], showCatalog = true }) {
             </TooltipTrigger>
             <TooltipContent side="bottom">
               <p>
-                <strong>{overdue[0].title}</strong> by {overdue[0].author}
+                <strong>{overdue[0].title}</strong> {t("overdue.by")}{" "}
+                {overdue[0].author}
               </p>
               <p className="text-xs">ISBN: {overdue[0].isbn}</p>
             </TooltipContent>
           </Tooltip>{" "}
           {overdue[0].due === 0 ? (
             <>
-              is due <span className="font-semibold">today</span>
+              {t("overdue.one.isDue")}{" "}
+              <span className="font-semibold">{t("overdue.today")}</span>
             </>
           ) : (
             <>
-              was due{" "}
+              {t("overdue.one.wasDue")}{" "}
               <span className="font-semibold">
-                {new Intl.RelativeTimeFormat("en").format(
+                {new Intl.RelativeTimeFormat(t("locale")).format(
                   overdue[0].due,
                   "day"
                 )}
               </span>
             </>
           )}
-          .<br /> Please return it as soon as possible.
+          .<br />
+          {t("overdue.one.notice")}
         </AlertDescription>
       </Alert>
     );
@@ -56,7 +64,7 @@ function BookAlerts({ books = [], showCatalog = true }) {
       <Alert variant="destructive">
         <AlertCircle className="w-6 h-6" />
         <AlertTitle className="font-semibold">
-          Multiple overdue books
+          {t("overdue.many.title")}
         </AlertTitle>
         <AlertDescription>
           {overdue.slice(0, 3).map((book, index) => (
@@ -67,14 +75,15 @@ function BookAlerts({ books = [], showCatalog = true }) {
                 </TooltipTrigger>
                 <TooltipContent side="bottom">
                   <p>
-                    <strong>{book.title}</strong> by {book.author}
+                    <strong>{book.title}</strong> {t("overdue.by")}{" "}
+                    {book.author}
                   </p>
                   <p className="text-xs">ISBN: {book.isbn}</p>
                   <p className="font-semibold text-red-500">
-                    Due{" "}
+                    {t("overdue.many.due")}{" "}
                     {book.due === 0
                       ? "today"
-                      : new Intl.RelativeTimeFormat("en").format(
+                      : new Intl.RelativeTimeFormat(t("locale")).format(
                           book.due,
                           "day"
                         )}
@@ -86,28 +95,31 @@ function BookAlerts({ books = [], showCatalog = true }) {
           ))}{" "}
           {overdue.length > 3 && (
             <>
-              and{" "}
+              {t("overdue.many.and")}{" "}
               <Tooltip>
                 <TooltipTrigger className="underline underline-offset-1 decoration-dashed font-semibold">
                   <Link
                     href="/books"
                     className="underline underline-offset-1 decoration-dashed font-semibold"
                   >
-                    {overdue.length - 3} more{" "}
-                    {overdue.length - 3 === 1 ? "book" : "books"}
+                    {overdue.length - 3}{" "}
+                    {overdue.length - 3 === 1
+                      ? t("overdue.many.oneMore")
+                      : t("overdue.many.multipleMore")}
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">
                   {overdue.slice(3).map((book, index) => (
                     <p key={`book-${index}`}>
-                      <strong>{book.title}</strong> by {book.author}
+                      <strong>{book.title}</strong> {t("overdue.by")}{" "}
+                      {book.author}
                     </p>
                   ))}
                 </TooltipContent>
               </Tooltip>
             </>
           )}{" "}
-          are overdue. Please return them as soon as possible.
+          {t("overdue.many.areOverdue")} {t("overdue.many.notice")}
         </AlertDescription>
       </Alert>
     );
@@ -117,21 +129,23 @@ function BookAlerts({ books = [], showCatalog = true }) {
     return (
       <Alert variant="warning">
         <AlertCircle className="w-6 h-6" />
-        <AlertTitle className="font-semibold">Book due soon</AlertTitle>
+        <AlertTitle className="font-semibold">
+          {t("dueSoon.one.title")}
+        </AlertTitle>
         <AlertDescription>
           <span className="font-semibold">
-            {dueSoon[0].title} by {dueSoon[0].author}
+            {dueSoon[0].title} {t("dueSoon.by")} {dueSoon[0].author}
           </span>{" "}
-          is due within the next 3 days.
+          {t("dueSoon.one.due")}
           <br />
-          You can find more information in the{" "}
+          {t("dueSoon.one.preBooks")}{" "}
           <Link
             href="/books"
             className="underline underline-offset-1 decoration-dashed font-semibold"
           >
-            My books
+            {t("dueSoon.one.books")}
           </Link>{" "}
-          section.
+          {t("dueSoon.one.afterBooks")}
         </AlertDescription>
       </Alert>
     );
@@ -141,10 +155,15 @@ function BookAlerts({ books = [], showCatalog = true }) {
     return (
       <Alert variant="warning">
         <AlertCircle className="w-6 h-6" />
-        <AlertTitle className="font-semibold">Books due soon</AlertTitle>
+        <AlertTitle className="font-semibold">
+          {t("dueSoon.many.title")}
+        </AlertTitle>
         <AlertDescription>
-          You have <span className="font-semibold">{dueSoon.length} books</span>
-          due within the next 3 days.
+          {t("dueSoon.many.preBooks")}{" "}
+          <span className="font-semibold">
+            {dueSoon.length} {t("dueSoon.many.books")}
+          </span>
+          {t("dueSoon.many.afterBooks")}
         </AlertDescription>
       </Alert>
     );
@@ -154,17 +173,16 @@ function BookAlerts({ books = [], showCatalog = true }) {
     showCatalog && (
       <Alert>
         <Book className="w-6 h-6" />
-        <AlertTitle className="font-semibold">Get reading today</AlertTitle>
+        <AlertTitle className="font-semibold">{t("browse.title")}</AlertTitle>
         <AlertDescription>
-          Head over to{" "}
+          {t("browse.preCatalog")}{" "}
           <Link
             href="/catalog"
             className="underline underline-offset-1 decoration-dashed"
           >
-            the catalog
+            {t("browse.catalog")}
           </Link>{" "}
-          and browse our selection of books. Maybe you&apos;ll find your new
-          favorite series today?
+          {t("browse.afterCatalog")}
         </AlertDescription>
       </Alert>
     )

@@ -1,0 +1,13 @@
+{
+    "welcome": "Cześć",
+    "catalog.title": "Katalog",
+    "catalog.description": "Przeglądaj książki z naszej kolekcji i wypożycz jedną z nich już dziś.",
+    "books.title": "Moje książki",
+    "books.description": "Przeglądaj i zarządzaj książkami, które wypożyczyłeś z naszej biblioteki i odnów je, jeśli potrzebujesz więcej czasu",
+    "users.title": "Użytkownicy",
+    "users.description": "Szukaj, wyświetlaj i zarządzaj użytkownikami naszej biblioteki.",
+    "users.button": "Zarządzaj użytkownikami",
+    "returns.title": "Zarządzanie książkami",
+    "returns.button": "Zarządzaj zwrotami",
+    "returns.catalog": "Modyfikuj katalog książek"
+}
