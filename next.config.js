@@ -1,14 +1,22 @@
 const { parse } = require("yaml");
-const fs = require("fs").promises;
+const fs = require("fs");
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  transpilePackages: ["geist"],
-};
+module.exports = async (phase, { defaultConfig }) => {
+  /** @type {import('next').NextConfig} */
+  const nextConfig = {
+    reactStrictMode: true,
+    transpilePackages: ["geist"],
+    ...defaultConfig,
+  };
 
-module.exports = async () => {
-  const configYaml = parse(await fs.readFile("./config.yaml", "utf8"));
+  const configYaml = fs.existsSync("./config.yaml")
+    ? parse(await fs.promises.readFile("./config.yaml", "utf8"))
+    : {
+        maxRentals: 10,
+        defaultRentalTime: 7,
+        prolongationTime: 7,
+      };
+
   const publicConfigYaml = Object.fromEntries(
     Object.entries(configYaml).map(([key, value]) => [
       key.startsWith("_")
@@ -18,7 +26,9 @@ module.exports = async () => {
     ])
   );
 
-  const langDirs = (await fs.readdir("./locales")).filter((f) => f !== "en");
+  const langDirs = (await fs.promises.readdir("./locales")).filter(
+    (f) => f !== "en"
+  );
 
   return {
     ...nextConfig,
