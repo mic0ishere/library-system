@@ -6,8 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 import Navbar from "@/components/navbar";
 
-// it needs to be imported here to work
-import "geist/font/sans";
+import { GeistSans } from "geist/font/sans";
 import "@/styles/globals.css";
 
 export default function App({
@@ -22,15 +21,17 @@ export default function App({
         enableSystem
         disableTransitionOnChange
       >
-        <ProtectedLayout>
-          <TooltipProvider>
-            <main className="w-full flex flex-col items-center px-4 md:px-16 lg:px-32">
+        <TooltipProvider>
+          <main
+            className={`w-full flex flex-col items-center px-4 md:px-16 lg:px-32 ${GeistSans.variable} font-sans`}
+          >
+            <ProtectedLayout>
               {Component.displayName !== "ErrorPage" && <Navbar />}
               <Component {...pageProps} />
-            </main>
+            </ProtectedLayout>
             <Toaster />
-          </TooltipProvider>
-        </ProtectedLayout>
+          </main>
+        </TooltipProvider>
       </ThemeProvider>
     </SessionProvider>
   );
