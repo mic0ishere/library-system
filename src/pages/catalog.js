@@ -45,7 +45,9 @@ export default function Catalog({ booksStr, isAdmin, adminProps }) {
             </Button>
           </AddNewBookModal>
         )}
-        <BooksCatalog columns={columns(isAdmin, JSON.parse(adminProps))} />
+        <BooksCatalog
+          columns={columns(isAdmin, adminProps && JSON.parse(adminProps))}
+        />
       </SWRConfig>
     </div>
   );
