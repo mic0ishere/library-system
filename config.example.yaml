@@ -3,3 +3,4 @@ _admins: [] # _ is a prefix for private variables
 maxRentals: 10
 defaultRentalTime: 7 # days
 prolongationTime: 7 # days
+disableUserBorrowing: false # if true, only admins can assign books to users

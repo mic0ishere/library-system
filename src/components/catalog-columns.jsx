@@ -127,15 +127,17 @@ export const columns = (isAdmin, adminProps) => [
         );
 
       return (
-        <div className="w-16">
-          {rent && (
-            <RentModal row={row.original}>
-              <Button size="sm" variant="secondary" className="-my-2">
-                Rent <BookUp2Icon className="w-4 h-4 ml-2" />
-              </Button>
-            </RentModal>
-          )}
-        </div>
+        !process.env.NEXT_PUBLIC_DISABLEUSERBORROWING && (
+          <div className="w-16">
+            {rent && (
+              <RentModal row={row.original}>
+                <Button size="sm" variant="secondary" className="-my-2">
+                  Rent <BookUp2Icon className="w-4 h-4 ml-2" />
+                </Button>
+              </RentModal>
+            )}
+          </div>
+        )
       );
     },
   },

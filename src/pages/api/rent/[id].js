@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import prisma from "@/lib/prisma";
+import isAdmin from "@/lib/is-admin";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -12,6 +13,18 @@ export default async function handler(req, res) {
   const { id: bookId } = req.query;
 
   if (req.method === "POST") {
+    if (
+      process.env.NEXT_PUBLIC_DISABLEUSERBORROWING &&
+      !isAdmin(session.user.email)
+    ) {
+      res.status(200).json({
+        message:
+          "Renting books is disabled at the moment. Please contact an administrator for more information.",
+        type: "error",
+      });
+      return;
+    }
+
     const book = await prisma.book.findUnique({
       where: {
         id: bookId,
