@@ -104,6 +104,7 @@ function BookOptions({ row, rent, adminProps, children }) {
               defaultValues={{
                 title: row.title,
                 author: row.author,
+                category: row.category,
                 year: row.year,
                 pages: row.pages,
                 isbn: row.isbn,
@@ -145,6 +146,7 @@ function BookOptions({ row, rent, adminProps, children }) {
               defaultValues={{
                 title: row.title,
                 author: row.author,
+                category: row.category,
                 year: row.year,
                 pages: row.pages,
                 isbn: row.isbn,

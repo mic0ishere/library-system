@@ -20,6 +20,7 @@ function BookForm({
   defaultValues = {
     title: "",
     author: "",
+    category: "",
     year: "",
     pages: "",
     isbn: "",
@@ -39,6 +40,9 @@ function BookForm({
           </Field>
           <Field form={form} name="author">
             Author
+          </Field>
+          <Field form={form} name="category">
+            Category
           </Field>
           <div className="w-full flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <Field form={form} name="year">

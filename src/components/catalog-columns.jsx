@@ -34,6 +34,20 @@ export const columns = (isAdmin, adminProps) => [
     },
   },
   {
+    accessorKey: "category",
+    id: "category",
+    cell: ({ row }) => (
+      <div className="flex space-x-2">
+        <span className="w-[150px] truncate font-medium">
+          {row.getValue("category")}
+        </span>
+      </div>
+    ),
+    filterFn: (row, category, value) => {
+      return value.includes(row.getValue(category));
+    },
+  },
+  {
     accessorKey: "title",
     header: ({ column }) => {
       return (
@@ -87,8 +101,8 @@ export const columns = (isAdmin, adminProps) => [
         </Tooltip>
       );
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+    filterFn: (row, status, value) => {
+      return value.includes(row.getValue(status));
     },
   },
   {

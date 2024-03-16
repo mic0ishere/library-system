@@ -9,6 +9,10 @@ export const bookSchema = joi.object({
         "string.empty": "Author name is required",
         "string.max": "Author name cannot be longer than 256 characters"
     }),
+    category: joi.string().max(64).messages({
+        "string.empty": "Category is required",
+        "string.max": "Category cannot be longer than 64 characters"
+    }),
     year: joi.string().max(64).messages({
         "string.empty": "Publishing year is required",
         "string.max": "Publishing year cannot be longer than 64 characters"

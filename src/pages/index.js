@@ -21,7 +21,6 @@ import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
 import dateDifference from "@/lib/date-difference";
 import useDictionary from "@/lib/use-translation";
-import { useEffect } from "react";
 
 export default function Home({ user, isAdmin, booksStr }) {
   const books = JSON.parse(booksStr);

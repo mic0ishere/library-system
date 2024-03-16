@@ -31,6 +31,9 @@ export function DataTable({ columns, data }) {
     columns,
     initialState: {
       pagination: { pageSize: 20, pageIndex: 0 },
+      columnVisibility: {
+        category: false,
+      },
     },
     state: {
       sorting,

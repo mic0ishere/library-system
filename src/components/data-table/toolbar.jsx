@@ -30,7 +30,15 @@ export function DataTableToolbar({ table }) {
             <XIcon className="ml-2 h-4 w-4" />
           </Button>
         </div>
-        <DataTableFacetedFilter column={table.getColumn("author")} title="Author" widePopover />
+        <DataTableFacetedFilter
+          column={table.getColumn("author")}
+          title="Author"
+          widePopover
+        />
+        <DataTableFacetedFilter
+          column={table.getColumn("category")}
+          title="Category"
+        />
         <DataTableFacetedFilter
           column={table.getColumn("status")}
           title="Status"

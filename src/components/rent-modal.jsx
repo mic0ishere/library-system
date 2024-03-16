@@ -67,6 +67,7 @@ function RentForm({ row, open }) {
       <div>
         <p className="text-lg">{row.author}</p>
         <ul className="text-sm text-left mt-4 md:mt-0 md:ml-4 md:list-disc">
+          <li>Category: {row.category}</li>
           <li>Published: {row.year}</li>
           <li>Pages: {row.pages}</li>
           <li>ISBN: {row.isbn}</li>
