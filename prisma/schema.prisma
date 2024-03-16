@@ -57,6 +57,7 @@ model Book {
   id         String           @id @default(cuid())
   title      String
   author     String
+  category   String           @default("Uncategorized")
   year       String
   pages      Int
   isbn       String
