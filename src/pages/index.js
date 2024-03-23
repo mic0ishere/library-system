@@ -26,10 +26,12 @@ import PageTitle from "@/components/page-title";
 export default function Home({ user, isAdmin, booksStr }) {
   const books = JSON.parse(booksStr);
 
-  const t = useDictionary("home");
+  const { t, hasLoaded } = useDictionary("home");
 
   return (
-    <div className="max-w-[600px] pt-8 pb-16">
+    <div
+      className={`max-w-[600px] pt-8 pb-16 ${!hasLoaded && "text-transparent"}`}
+    >
       <PageTitle>{t("pageTitle")}</PageTitle>
       <h1 className="text-4xl">
         {t("welcome")}, {user.name ?? ""}

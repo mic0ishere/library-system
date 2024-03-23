@@ -6,6 +6,7 @@ function useDictionary(section) {
   const router = useRouter();
 
   const [dictionary, setDictionary] = useState({
+    ...dictionaryEn[section],
     locale: "en",
   });
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -32,7 +33,6 @@ function useDictionary(section) {
     const fetchDictionary = async () => {
       const dictionary = await fetchLanguageFile(section);
       setDictionary({
-        ...dictionaryEn[section],
         ...dictionary,
         locale: router.locale,
       });
@@ -45,7 +45,10 @@ function useDictionary(section) {
     fetchDictionary(section);
   }, [router, section]);
 
-  return (key) => dictionary[key] || (hasLoaded ? key : "");
+  return {
+    t: (key) => dictionary[key] || key,
+    hasLoaded,
+  };
 }
 
 export default useDictionary;

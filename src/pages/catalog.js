@@ -12,10 +12,14 @@ import prisma from "@/lib/prisma";
 import useDictionary from "@/lib/use-translation";
 
 export default function Catalog({ booksStr, isAdmin, adminProps }) {
-  const t = useDictionary("catalog");
+  const { t, hasLoaded } = useDictionary("catalog");
 
   return (
-    <div className="w-full pt-8 pb-16 max-w-[900px]">
+    <div
+      className={`w-full pt-8 pb-16 max-w-[900px] ${
+        !hasLoaded && "text-transparent"
+      }`}
+    >
       {isAdmin ? (
         <>
           <h1 className="text-4xl">{t("admin.title")}</h1>

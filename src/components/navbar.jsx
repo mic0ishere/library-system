@@ -11,10 +11,10 @@ import { signOut } from "next-auth/react";
 import useDictionary from "@/lib/use-translation";
 
 function Navbar() {
-  const t = useDictionary("navbar");
+  const { t, hasLoaded } = useDictionary("navbar");
 
   return (
-    <NavigationMenu className="top-4 mx-auto w-screen">
+    <NavigationMenu className={`top-4 mx-auto w-screen ${!hasLoaded && "text-transparent"}`}>
       <NavigationMenuList>
         <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>

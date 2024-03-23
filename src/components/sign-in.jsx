@@ -12,10 +12,14 @@ import useDictionary from "@/lib/use-translation";
 import PageTitle from "./page-title";
 
 function SignIn() {
-  const t = useDictionary("sign-in");
+  const { t, hasLoaded } = useDictionary("sign-in");
 
   return (
-    <Card className="w-[min(380px,90vw)] absolute top-1/4 left-1/2 transform -translate-x-1/2 sm:p-2">
+    <Card
+      className={`w-[min(380px,90vw)] absolute top-1/4 left-1/2 transform -translate-x-1/2 sm:p-2 ${
+        !hasLoaded && "text-transparent"
+      }`}
+    >
       <PageTitle>{t("pageTitle")}</PageTitle>
       <CardHeader>
         <CardTitle className="text-3xl pb-2">

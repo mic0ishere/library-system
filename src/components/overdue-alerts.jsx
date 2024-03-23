@@ -9,7 +9,7 @@ import Link from "next/link";
 import useDictionary from "@/lib/use-translation";
 
 function BookAlerts({ books = [], showCatalog = true }) {
-  const t = useDictionary("overdueAlerts");
+  const { t, hasLoaded } = useDictionary("overdueAlerts");
 
   const overdue = books
     .filter((book) => book.due < 0)
@@ -18,7 +18,7 @@ function BookAlerts({ books = [], showCatalog = true }) {
 
   if (overdue.length === 1) {
     return (
-      <Alert variant="destructive">
+      <Alert variant="destructive" className={!hasLoaded && "text-transparent"}>
         <AlertCircle className="w-6 h-6" />
         <AlertTitle className="font-semibold">
           {t("overdue.one.title")}
@@ -61,7 +61,7 @@ function BookAlerts({ books = [], showCatalog = true }) {
 
   if (overdue.length > 1) {
     return (
-      <Alert variant="destructive">
+      <Alert variant="destructive" className={!hasLoaded && "text-transparent"}>
         <AlertCircle className="w-6 h-6" />
         <AlertTitle className="font-semibold">
           {t("overdue.many.title")}
@@ -127,7 +127,7 @@ function BookAlerts({ books = [], showCatalog = true }) {
 
   if (dueSoon.length === 1) {
     return (
-      <Alert variant="warning">
+      <Alert variant="warning" className={!hasLoaded && "text-transparent"}>
         <AlertCircle className="w-6 h-6" />
         <AlertTitle className="font-semibold">
           {t("dueSoon.one.title")}
@@ -153,7 +153,7 @@ function BookAlerts({ books = [], showCatalog = true }) {
 
   if (dueSoon.length > 1) {
     return (
-      <Alert variant="warning">
+      <Alert variant="warning" className={!hasLoaded && "text-transparent"}>
         <AlertCircle className="w-6 h-6" />
         <AlertTitle className="font-semibold">
           {t("dueSoon.many.title")}
@@ -171,7 +171,7 @@ function BookAlerts({ books = [], showCatalog = true }) {
 
   return (
     showCatalog && (
-      <Alert>
+      <Alert className={!hasLoaded && "text-transparent"}>
         <Book className="w-6 h-6" />
         <AlertTitle className="font-semibold">{t("browse.title")}</AlertTitle>
         <AlertDescription>
