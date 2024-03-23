@@ -8,29 +8,32 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import useDictionary from "@/lib/use-translation";
 
 function Navbar() {
+  const t = useDictionary("navbar");
+
   return (
     <NavigationMenu className="top-4 mx-auto w-screen">
       <NavigationMenuList>
         <NavigationMenuItem>
           <Link href="/" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Home
+              {t("home")}
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <Link href="/catalog" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Catalog
+              {t("catalog")}
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <Link href="/books" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              My books
+              {t("books")}
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
@@ -40,9 +43,15 @@ function Navbar() {
           className={navigationMenuTriggerStyle()}
           onClick={() => signOut()}
         >
-          Log out
+          {t("signOut")}
         </button>
-        <ThemeToggle />
+        <ThemeToggle
+          translations={{
+            light: t("theme.light"),
+            dark: t("theme.dark"),
+            system: t("theme.system"),
+          }}
+        />
       </div>
     </NavigationMenu>
   );
