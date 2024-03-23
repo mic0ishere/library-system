@@ -82,7 +82,7 @@ function BookAlerts({ books = [], showCatalog = true }) {
                   <p className="font-semibold text-red-500">
                     {t("overdue.many.due")}{" "}
                     {book.due === 0
-                      ? "today"
+                      ? t("overdue.today")
                       : new Intl.RelativeTimeFormat(t("locale")).format(
                           book.due,
                           "day"
@@ -162,7 +162,7 @@ function BookAlerts({ books = [], showCatalog = true }) {
           {t("dueSoon.many.preBooks")}{" "}
           <span className="font-semibold">
             {dueSoon.length} {t("dueSoon.many.books")}
-          </span>
+          </span>{" "}
           {t("dueSoon.many.afterBooks")}
         </AlertDescription>
       </Alert>
