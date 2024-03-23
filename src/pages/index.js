@@ -21,6 +21,7 @@ import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
 import dateDifference from "@/lib/date-difference";
 import useDictionary from "@/lib/use-translation";
+import PageTitle from "@/components/page-title";
 
 export default function Home({ user, isAdmin, booksStr }) {
   const books = JSON.parse(booksStr);
@@ -29,6 +30,7 @@ export default function Home({ user, isAdmin, booksStr }) {
 
   return (
     <div className="max-w-[600px] pt-8 pb-16">
+      <PageTitle>{t("pageTitle")}</PageTitle>
       <h1 className="text-4xl">
         {t("welcome")}, {user.name ?? ""}
       </h1>

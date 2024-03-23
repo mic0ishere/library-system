@@ -8,6 +8,7 @@ import Navbar from "@/components/navbar";
 
 import { GeistSans } from "geist/font/sans";
 import "@/styles/globals.css";
+import Head from "next/head";
 
 export default function App({
   Component,
@@ -15,6 +16,9 @@ export default function App({
 }) {
   return (
     <SessionProvider session={session}>
+      <Head>
+        <title>{process.env.NEXT_PUBLIC_SITE_NAME || "Library System"}</title>
+      </Head>
       <ThemeProvider
         attribute="class"
         defaultTheme="system"

@@ -9,12 +9,14 @@ import {
 } from "@/components/ui/card";
 import { LogIn } from "lucide-react";
 import useDictionary from "@/lib/use-translation";
+import PageTitle from "./page-title";
 
 function SignIn() {
   const t = useDictionary("sign-in");
 
   return (
     <Card className="w-[min(380px,90vw)] absolute top-1/4 left-1/2 transform -translate-x-1/2 sm:p-2">
+      <PageTitle>{t("pageTitle")}</PageTitle>
       <CardHeader>
         <CardTitle className="text-3xl pb-2">
           <span className="text-xl">{t("welcomeTo")}</span>
