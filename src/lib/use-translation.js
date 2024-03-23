@@ -6,9 +6,9 @@ function useDictionary(section) {
   const router = useRouter();
 
   const [dictionary, setDictionary] = useState({
-    ...dictionaryEn[section],
     locale: "en",
   });
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
     const fetchLanguageFile = async (section) => {
@@ -32,9 +32,11 @@ function useDictionary(section) {
     const fetchDictionary = async () => {
       const dictionary = await fetchLanguageFile(section);
       setDictionary({
+        ...dictionaryEn[section],
         ...dictionary,
         locale: router.locale,
       });
+      setHasLoaded(true);
     };
 
     const isEnglish = !router.locale || router.locale === "en";
@@ -43,7 +45,7 @@ function useDictionary(section) {
     fetchDictionary(section);
   }, [router, section]);
 
-  return (key) => dictionary[key] || key;
+  return (key) => dictionary[key] || (hasLoaded ? key : "");
 }
 
 export default useDictionary;
