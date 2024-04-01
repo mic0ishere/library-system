@@ -40,7 +40,7 @@ function useDictionary(section) {
     };
 
     const isEnglish = !router.locale || router.locale === "en";
-    if (isEnglish) return;
+    if (isEnglish) return setHasLoaded(true);
 
     fetchDictionary(section);
   }, [router, section]);
