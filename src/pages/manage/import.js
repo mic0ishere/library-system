@@ -32,6 +32,63 @@ export default function ManageReturns() {
   const [books, setBooks] = useState([]);
   const [error, setError] = useState(null);
 
+  async function handleFileChange(e) {
+    setDragging(false);
+
+    const file = e.target?.files[0] || e.dataTransfer?.files[0]; 
+
+    const reader = new FileReader();
+    reader.readAsText(file);
+
+    const fileContents = await new Promise((resolve) => {
+      reader.onload = (event) => resolve(event.target.result);
+    });
+
+    setDisabled(true);
+
+    try {
+      const data = parse(fileContents, {
+        columns: true,
+        skip_empty_lines: true,
+      });
+
+      const books = [];
+
+      for (const book of data) {
+        try {
+          const validatedData = Joi.attempt(book, bookSchema, {
+            abortEarly: false,
+            stripUnknown: true,
+          });
+          books.push({
+            book: validatedData,
+            errors: [],
+            success: true,
+          });
+        } catch (error) {
+          console.error(error);
+          books.push({
+            book: book,
+            errors: error.details,
+            success: false,
+          });
+        }
+      }
+
+      setBooks(books);
+      setError(null);
+    } catch (error) {
+      e.target.value = "";
+
+      console.error(error);
+
+      setBooks([]);
+      setError(error.message);
+    }
+
+    setDisabled(false);
+  }
+
   return (
     <div className="w-full pt-8 pb-16 max-w-[900px]">
       <h1 className="text-4xl">Import Books from a CSV file</h1>
@@ -41,68 +98,15 @@ export default function ManageReturns() {
       </p>
       <Input
         type="file"
+        accept=".csv, .txt, text/csv"
         className={`cursor-pointer h-auto border-neutral-300 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-900 ${
           dragging ? "border-2 border-dashed p-[15px]" : "p-4"
         }`}
         disabled={disabled}
         onDragOver={() => setDragging(true)}
         onDragLeave={() => setDragging(false)}
-        onDrop={async (e) => {
-          setDragging(false);
-
-          const file = e.dataTransfer.files[0];
-
-          const reader = new FileReader();
-          reader.readAsText(file);
-
-          const fileContents = await new Promise((resolve) => {
-            reader.onload = (event) => resolve(event.target.result);
-          });
-
-          setDisabled(true);
-
-          try {
-            const data = parse(fileContents, {
-              columns: true,
-              skip_empty_lines: true,
-            });
-
-            const books = [];
-
-            for (const book of data) {
-              try {
-                const validatedData = Joi.attempt(book, bookSchema, {
-                  abortEarly: false,
-                  stripUnknown: true,
-                });
-                books.push({
-                  book: validatedData,
-                  errors: [],
-                  success: true,
-                });
-              } catch (error) {
-                console.error(error);
-                books.push({
-                  book: book,
-                  errors: error.details,
-                  success: false,
-                });
-              }
-            }
-
-            setBooks(books);
-            setError(null);
-          } catch (error) {
-            e.target.value = "";
-
-            console.error(error);
-
-            setBooks([]);
-            setError(error.message);
-          }
-
-          setDisabled(false);
-        }}
+        onDrop={handleFileChange}
+        onChange={handleFileChange}
       />
       {error && (
         <Alert variant="destructive" className="mt-4">
