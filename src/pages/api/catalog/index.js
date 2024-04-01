@@ -17,9 +17,10 @@ export default async function handler(req, res) {
     res.status(200).json(books);
   } else if (req.method === "POST" && isAdmin(session.user.email)) {
     const data = req.body;
+    let validatedData = null;
 
     try {
-      Joi.assert(data, bookSchema);
+      validatedData = Joi.attempt(data, bookSchema);
     } catch (error) {
       res.status(400).json({
         message:
@@ -31,7 +32,7 @@ export default async function handler(req, res) {
 
     try {
       await prisma.book.create({
-        data,
+        data: validatedData,
       });
     } catch (error) {
       res.status(500).json({

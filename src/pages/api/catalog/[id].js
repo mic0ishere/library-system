@@ -214,17 +214,17 @@ export default async function handler(req, res) {
       type: "success",
     });
   } else if (req.method === "PUT") {
-    const validatedData = Joi.attempt(data, bookSchema).catch((error) => {
-      console.error(error);
-    });
+    let validatedData = null;
 
-    if (!validatedData) {
+    try {
+      validatedData = Joi.attempt(book, bookSchema);
+    } catch (error) {
       res.status(400).json({
         message:
           "Invalid data provided. Please check information and try again.",
         type: "error",
       });
-      return;
+      return console.error(error);
     }
 
     try {
