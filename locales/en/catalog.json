@@ -3,5 +3,7 @@
     "user.description": "You can edit book information, control their status or delete them from the catalog using the menu on the right side of each book. If you want to add a new book, just click the button below.",
     "admin.title": "Browse our catalog",
     "admin.description": "Our collection includes a wide range of books from various genres and authors. You can search for a specific book or browse through our collection to find something new to read.",
-    "admin.addBook": "Add a new book"
+    "admin.addBook": "Add a new book",
+    "admin.importBook": "Import books from a file",
+    "admin.downloadSample": "Download a sample file"
 }

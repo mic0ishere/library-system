@@ -1,4 +1,8 @@
-import { BookPlusIcon } from "lucide-react";
+import {
+  BookPlusIcon,
+  FileSpreadsheetIcon,
+  UploadCloudIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SWRConfig } from "swr";
 import BooksCatalog from "@/components/books-catalog";
@@ -10,6 +14,7 @@ import { getSession } from "next-auth/react";
 import isAdmin from "@/lib/is-admin";
 import prisma from "@/lib/prisma";
 import useDictionary from "@/lib/use-translation";
+import Link from "next/link";
 
 export default function Catalog({ booksStr, isAdmin, adminProps }) {
   const { t, hasLoaded } = useDictionary("catalog");
@@ -39,15 +44,26 @@ export default function Catalog({ booksStr, isAdmin, adminProps }) {
         }}
       >
         {isAdmin && (
-          <AddNewBookModal>
-            <Button
-              variant="secondary"
-              className="mb-8 w-full sm:w-auto min-w-[250px]"
-            >
-              <BookPlusIcon className="mr-2 h-5 w-5" />
-              {t("admin.addBook")}
+          <div className="mb-6 w-full flex flex-col sm:flex-row gap-2 md:gap-4">
+            <AddNewBookModal>
+              <Button variant="secondary" className="w-full">
+                <BookPlusIcon className="mr-2 h-5 w-5" />
+                {t("admin.addBook")}
+              </Button>
+            </AddNewBookModal>
+            <Button variant="secondary" className="w-full" asChild>
+              <Link href="/manage/import">
+                <UploadCloudIcon className="mr-2 h-5 w-5" />
+                {t("admin.importBook")}
+              </Link>
             </Button>
-          </AddNewBookModal>
+            <Button variant="secondary" className="w-full" asChild>
+              <Link href="/sample-books-import.csv" locale={false}>
+                <FileSpreadsheetIcon className="mr-2 h-5 w-5" />
+                {t("admin.downloadSample")}
+              </Link>
+            </Button>
+          </div>
         )}
         <BooksCatalog
           columns={columns(isAdmin, adminProps && JSON.parse(adminProps))}
