@@ -214,15 +214,17 @@ export default async function handler(req, res) {
       type: "success",
     });
   } else if (req.method === "PUT") {
-    try {
-      Joi.assert(data, bookSchema);
-    } catch (error) {
+    const validatedData = Joi.attempt(data, bookSchema).catch((error) => {
+      console.error(error);
+    });
+
+    if (!validatedData) {
       res.status(400).json({
         message:
           "Invalid data provided. Please check information and try again.",
         type: "error",
       });
-      return console.error(error);
+      return;
     }
 
     try {
@@ -230,7 +232,7 @@ export default async function handler(req, res) {
         where: {
           id: bookId,
         },
-        data,
+        data: validatedData,
       });
     } catch (error) {
       res.status(500).json({
