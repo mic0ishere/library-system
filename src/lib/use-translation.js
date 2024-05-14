@@ -48,21 +48,17 @@ function useDictionary(section) {
   return {
     t: (key, ...args) => {
       let text = dictionary[key] || key;
-      if (!args.length) return text;
-      
+      if (args.length === 0) return text;
+
       if (typeof args[0] === "object") {
         return Object.entries(args[0]).reduce((acc, [key, value]) => {
-          return acc.replace(`{{${key}}}`, value);
+          return acc.replace(`{${key}}`, value);
         }, text);
       }
 
-      if (typeof args === "array") {
-        return args.reduce((acc, value, index) => {
-          return acc.replace(`{{${index}}}`, value);
-        }, text);
-      }
-
-      return text;
+      return args.reduce((acc, value, index) => {
+        return acc.replace(`{${index}}`, value);
+      }, text);
     },
     hasLoaded,
   };
