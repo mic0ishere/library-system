@@ -21,6 +21,7 @@ import {
 
 import { DataTableToolbar } from "@/components/data-table/toolbar";
 import { DataTablePagination } from "@/components/data-table/pagination";
+import useDictionary from "@/lib/use-translation";
 
 export function DataTable({ columns, data }) {
   const [columnFilters, setColumnFilters] = useState([]);
@@ -48,9 +49,11 @@ export function DataTable({ columns, data }) {
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  const { t, hasLoaded } = useDictionary("data-table");
+
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar table={table} t={t} />
       <div className="rounded-md border border-neutral-200 dark:border-neutral-800">
         <Table>
           <TableHeader>
@@ -91,14 +94,14 @@ export function DataTable({ columns, data }) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {t("noResults")}
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination t={t} table={table} />
     </div>
   );
 }

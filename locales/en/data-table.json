@@ -1,0 +1,12 @@
+{
+    "noResults": "No results.",
+    "oneOf": "Page {0} of {1}",
+    "filterByTitle": "Filter books...",
+    "selected": "{0} selected",
+    "noResultsFilter": "No results found.",
+    "clearFilter": "Clear filter",
+    "reset": "Reset",
+    "author": "Author",
+    "category": "Category",
+    "status": "Status"
+}

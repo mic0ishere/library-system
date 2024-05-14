@@ -1,0 +1,10 @@
+{
+    "available.label": "Available",
+    "available.description": "Book is available to be rented.",
+    "back_soon.label": "Back soon",
+    "back_soon.description": "This book has been marked as returned and is waiting for approval.",
+    "rented.label": "Rented",
+    "rented.description": "Book is currently rented by someone.",
+    "not_available.label": "Unavailable",
+    "not_available.description": "This book is not available at the moment."
+}
