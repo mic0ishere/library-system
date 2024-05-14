@@ -1,4 +1,5 @@
 {
+    "pageTitle": "Book Catalog",
     "user.title": "Welcome to the catalog!",
     "user.description": "You can edit book information, control their status or delete them from the catalog using the menu on the right side of each book. If you want to add a new book, just click the button below.",
     "admin.title": "Browse our catalog",

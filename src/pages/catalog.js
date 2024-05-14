@@ -15,6 +15,7 @@ import isAdmin from "@/lib/is-admin";
 import prisma from "@/lib/prisma";
 import useDictionary from "@/lib/use-translation";
 import Link from "next/link";
+import PageTitle from "@/components/page-title";
 
 export default function Catalog({ booksStr, isAdmin, adminProps }) {
   const { t, hasLoaded } = useDictionary("catalog");
@@ -25,6 +26,7 @@ export default function Catalog({ booksStr, isAdmin, adminProps }) {
         !hasLoaded && "text-transparent"
       }`}
     >
+      <PageTitle>{t("pageTitle")}</PageTitle>
       {isAdmin ? (
         <>
           <h1 className="text-4xl">{t("admin.title")}</h1>
