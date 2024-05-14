@@ -34,7 +34,7 @@ export default function Home({ user, isAdmin, booksStr }) {
     >
       <PageTitle>{t("pageTitle")}</PageTitle>
       <h1 className="text-4xl">
-        {t("welcome")}, {user.name ?? ""}
+        {t("welcome", user.name)}
       </h1>
       <div className="flex justify-center w-full mt-6">
         <BookAlerts books={books} />
