@@ -5,5 +5,11 @@
     "pages": "Pages: {0}",
     "isbn": "ISBN: {0}",
     "dueDate": "Due date",
-    "returnButton": "Return book"
+    "dialog.openButton": "Return book",
+    "dialog.title": "Return a book",
+    "dialog.cancel": "Cancel",
+    "dialog.howItWorksTitle": "How it works",
+    "dialog.howItWorks": "After putting the book back onto the bookshelf, click the button below to confirm the return. It will be sent to the librarian for confirmation, and afterwards, the book will be available for rent again.",
+    "dialog.loading": "Returning book...",
+    "dialog.confirm": "Return book"
 }

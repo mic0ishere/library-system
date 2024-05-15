@@ -58,16 +58,17 @@ function BookReturnCard({
       </CardHeader>
       <CardContent>
         <p className={book.due < 0 ? "text-red-500" : ""}>
-          <strong>{t("dueDate")}:</strong> {new Date(book.dueDate).toDateString()} (
+          <strong>{t("dueDate")}:</strong>{" "}
+          {new Date(book.dueDate).toDateString()} (
           {book.due === 0
             ? "today"
             : new Intl.RelativeTimeFormat("en").format(book.due, "day")}
           )
         </p>
         {showReturn && (
-          <ReturnModal book={book}>
+          <ReturnModal book={book} t={t}>
             <Button variant="outline" className="w-full mt-4">
-              {t("returnButton")}
+              {t("dialog.openButton")}
             </Button>
           </ReturnModal>
         )}
@@ -77,7 +78,7 @@ function BookReturnCard({
   );
 }
 
-function ReturnModal({ book, children }) {
+function ReturnModal({ book, children, t }) {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
@@ -87,9 +88,9 @@ function ReturnModal({ book, children }) {
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Return a book</DialogTitle>
+            <DialogTitle>{t("dialog.title")}</DialogTitle>
           </DialogHeader>
-          <ReturnForm book={book} open={setOpen} />
+          <ReturnForm book={book} open={setOpen} t={t} />
         </DialogContent>
       </Dialog>
     );
@@ -99,12 +100,12 @@ function ReturnModal({ book, children }) {
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Return a book</DrawerTitle>
-          <ReturnForm book={book} open={setOpen} />
+          <DrawerTitle>{t("dialog.title")}</DrawerTitle>
+          <ReturnForm book={book} open={setOpen} t={t} />
         </DrawerHeader>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline">{t("dialog.cancel")}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
@@ -112,7 +113,7 @@ function ReturnModal({ book, children }) {
   );
 }
 
-function ReturnForm({ book, open }) {
+function ReturnForm({ book, open, t }) {
   const { mutate } = useSWRConfig();
 
   return (
@@ -124,13 +125,8 @@ function ReturnForm({ book, open }) {
 
       <Alert variant="info" className="text-left">
         <HelpCircleIcon className="w-5 h-5" />
-        <AlertTitle>How it works</AlertTitle>
-        <AlertDescription>
-          After putting the book back onto the bookshelf, click the button below
-          to confirm the return. It will be sent to the librarian for
-          confirmation, and afterwards, the book will be available for rent
-          again.
-        </AlertDescription>
+        <AlertTitle>{t("dialog.howItWorksTitle")}</AlertTitle>
+        <AlertDescription>{t("dialog.howItWorks")}</AlertDescription>
       </Alert>
 
       <Button
@@ -144,13 +140,13 @@ function ReturnForm({ book, open }) {
           };
 
           toast.promise(returnBook(book.id), {
-            loading: "Returning book...",
+            loading: t("dialog.loading"),
             success: afterPromise,
             error: afterPromise,
           });
         }}
       >
-        Return book
+        {t("dialog.confirm")}
       </Button>
     </div>
   );
