@@ -7,6 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import dateDifference from "@/lib/date-difference";
+import useDictionary from "@/lib/use-translation";
 
 function PreviousRentalsTable({
   rentals,
@@ -14,14 +15,20 @@ function PreviousRentalsTable({
   isUser = false,
   ...props
 }) {
+  const { t } = useDictionary("previous-rentals");
+
   return (
     <Table {...props}>
       <TableHeader>
         <TableRow>
-          <TableHead className="h-10">{isUser ? "Book" : "User"}</TableHead>
-          <TableHead className="h-10 w-[100px]">Rented</TableHead>
-          <TableHead className="h-10 w-[100px]">Returned</TableHead>
-          <TableHead className="h-10 w-[100px] text-right">Due date</TableHead>
+          <TableHead className="h-10">
+            {isUser ? t("book") : t("user")}
+          </TableHead>
+          <TableHead className="h-10 w-[100px]">{t("rented")}</TableHead>
+          <TableHead className="h-10 w-[100px]">{t("returned")}</TableHead>
+          <TableHead className="h-10 w-[100px] text-right">
+            {t("dueDate")}
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -36,10 +43,10 @@ function PreviousRentalsTable({
                       <span className="font-normal text-gray-500 dark:text-gray-400 mr-2">
                         {rental?.book?.author}
                       </span>
-                      {rental?.book?.title || "Unknown book"}
+                      {rental?.book?.title || t("unknownBook")}
                     </>
                   ) : (
-                    rental?.user?.name || "Unknown user"
+                    rental?.user?.name || t("unknownUser")
                   )}
                 </TableCell>
                 <TableCell>
@@ -62,8 +69,8 @@ function PreviousRentalsTable({
                     }
                   >
                     {dateDifference(rental.dueDate, Date.now()) < 0
-                      ? "Overdue"
-                      : "Rented"}
+                      ? t("overdue")
+                      : t("currentRented")}
                   </TableCell>
                 )}
 
@@ -75,10 +82,8 @@ function PreviousRentalsTable({
         ) : (
           <TableRow>
             <TableCell colSpan={4} className="text-center">
-              {!isLoading &&
-                rentals?.length === 0 &&
-                "No previous rentals found"}
-              {isLoading && "Loading..."}
+              {!isLoading && rentals?.length === 0 && t("noRentals")}
+              {isLoading && t("loading")}
             </TableCell>
           </TableRow>
         )}

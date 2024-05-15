@@ -10,6 +10,8 @@ import bookForm from "../../locales/en/book-form.json";
 import bookDelete from "../../locales/en/book-delete.json";
 import catalogColumns from "../../locales/en/catalog-columns.json";
 import booksReturns from "../../locales/en/books-returns.json";
+import statusInformation from "../../locales/en/status-information.json";
+import previousRentals from "../../locales/en/previous-rentals.json";
 
 export const dictionaryEn = {
   home,
@@ -24,4 +26,6 @@ export const dictionaryEn = {
   "book-delete": bookDelete,
   "catalog-columns": catalogColumns,
   "books-returns": booksReturns,
+  "status-information": statusInformation,
+  "previous-rentals": previousRentals,
 };

@@ -34,31 +34,7 @@ import { useState } from "react";
 import useSWR from "swr";
 import { statuses } from "@/components/constants";
 import { cn } from "@/lib/utils";
-
-const statusChangeWarnings = {
-  // new status to be set
-  AVAILABLE: {
-    // previous statuses that will trigger the warning
-    type: ["RENTED"],
-    message:
-      "The book will be marked as if it was just returned and confirmed to be available.",
-  },
-  NOT_AVAILABLE: {
-    type: ["RENTED"],
-    message:
-      "The book will be marked as if it was just returned and confirmed to be not available.",
-  },
-  RENTED: {
-    type: ["AVAILABLE", "BACK_SOON", "NOT_AVAILABLE"],
-    message:
-      "The book will be marked as if it was just rented by the selected user.",
-  },
-  BACK_SOON: {
-    type: ["AVAILABLE", "RENTED", "NOT_AVAILABLE"],
-    message:
-      "The book will be marked as if it was just returned by the previous renter and will be waiting for the confirmation.",
-  },
-};
+import useDictionary from "@/lib/use-translation";
 
 function StatusInformation({ row, users = [], onSubmit }) {
   const {
@@ -75,6 +51,30 @@ function StatusInformation({ row, users = [], onSubmit }) {
   const [openUser, setOpenUser] = useState(false);
   const [selectedUser, setUser] = useState("");
 
+  const { t } = useDictionary("status-information");
+  const { t: tStatus } = useDictionary("statuses");
+
+  const statusChangeWarnings = {
+    // new status to be set
+    AVAILABLE: {
+      // previous statuses that will trigger the warning
+      type: ["RENTED"],
+      message: t("changeWarnings.available"),
+    },
+    NOT_AVAILABLE: {
+      type: ["RENTED"],
+      message: t("changeWarnings.notAvailable"),
+    },
+    RENTED: {
+      type: ["AVAILABLE", "BACK_SOON", "NOT_AVAILABLE"],
+      message: t("changeWarnings.rented"),
+    },
+    BACK_SOON: {
+      type: ["AVAILABLE", "RENTED", "NOT_AVAILABLE"],
+      message: t("changeWarnings.backSoon"),
+    },
+  };
+
   return (
     <div className="overflow-auto">
       <h1 className="text-2xl font-bold">{row.title}</h1>
@@ -88,7 +88,7 @@ function StatusInformation({ row, users = [], onSubmit }) {
       )}
       <Accordion type="single" collapsible>
         <AccordionItem value="previous-rentals" className="border-b-0">
-          <AccordionTrigger>Previous rentals</AccordionTrigger>
+          <AccordionTrigger>{t("previousRentals")}</AccordionTrigger>
           <AccordionContent className="p-0 pb-4">
             <PreviousRentalsTable
               rentals={book?.rentals || []}
@@ -99,7 +99,7 @@ function StatusInformation({ row, users = [], onSubmit }) {
         </AccordionItem>
       </Accordion>
       <div>
-        <h2 className="text-xl font-bold mb-2">Change status</h2>
+        <h2 className="text-xl font-bold mb-2">{t("changeStatus")}</h2>
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2">
           <Select
             onValueChange={(newStatus) => setStatus(newStatus)}
@@ -109,16 +109,26 @@ function StatusInformation({ row, users = [], onSubmit }) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {statuses.map((status) => (
-                <SelectItem key={status.value} value={status.value}>
-                  <div className="flex items-center gap-2">
-                    {status.icon && (
-                      <status.icon className="h-4 w-4 text-muted-foreground" />
-                    )}
-                    {status.label} {status.value === row.status && "(current)"}
-                  </div>
-                </SelectItem>
-              ))}
+              {statuses
+                .map((status) => ({
+                  ...status,
+                  label: tStatus(`${status.value.toLowerCase()}.label`),
+                  description: tStatus(
+                    `${status.value.toLowerCase()}.description`
+                  ),
+                }))
+                .map((status) => (
+                  <SelectItem key={status.value} value={status.value}>
+                    <div className="flex items-center gap-2">
+                      {status.icon && (
+                        <status.icon className="h-4 w-4 text-muted-foreground" />
+                      )}
+                      {status.label}{" "}
+                      {status.value === row.status &&
+                        `(${t("changeStatus.current")})`}
+                    </div>
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
 
@@ -138,15 +148,15 @@ function StatusInformation({ row, users = [], onSubmit }) {
                           ? user.value === row.rentedById
                           : user.value === selectedUser
                       )?.label
-                    : "Select user..."}
+                    : t("changeStatus.selectUser")}
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </button>
               )}
             </PopoverTrigger>
             <PopoverContent className="w-full  p-0">
               <Command>
-                <CommandInput placeholder="Search users..." />
-                <CommandEmpty>No user found.</CommandEmpty>
+                <CommandInput placeholder={t("changeStatus.searchUsers")} />
+                <CommandEmpty>{t("changeStatus.noUser")}</CommandEmpty>
                 <CommandGroup>
                   {users.map((user) => (
                     <CommandItem
@@ -193,7 +203,7 @@ function StatusInformation({ row, users = [], onSubmit }) {
             });
           }}
         >
-          Update
+          {t("changeStatus.update")}
         </Button>
       </div>
     </div>

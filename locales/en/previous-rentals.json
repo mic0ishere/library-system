@@ -1,0 +1,13 @@
+{
+    "book": "Book",
+    "user": "User",
+    "rented": "Rented",
+    "returned": "Returned",
+    "dueDate": "Due Date",
+    "overdue": "Overdue",
+    "currentRented": "Rented",
+    "unknownBook": "Unknown book",
+    "unknownUser": "Unknown user",
+    "noRentals": "No previous rentals found",
+    "loading": "Loading..."
+}
