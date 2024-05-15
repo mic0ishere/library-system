@@ -43,7 +43,7 @@ function BooksReturns() {
         {books
           .filter((book) => typeof book.due === "number")
           .map((book) => (
-            <BookReturnCard key={book.id} book={book} t={t} />
+            <BookReturnCard key={book.id} book={book} />
           ))}
       </div>
     </>

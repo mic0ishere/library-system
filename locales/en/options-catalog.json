@@ -1,0 +1,15 @@
+{
+    "cancel": "Cancel",
+    "options.rent": "Rent",
+    "options.status": "Status",
+    "options.edit": "Edit",
+    "options.delete": "Delete",
+    "edit.button": "Edit book",
+    "titles.rent": "Rent a book",
+    "titles.status": "Rental status",
+    "titles.edit": "Edit book",
+    "titles.delete": "Delete book",
+    "editingBook": "Editing book \"{title}\"",
+    "deletingBook": "Deleting book \"{title}\"",
+    "updatingStatus": "Updating status for \"{title}\""
+}

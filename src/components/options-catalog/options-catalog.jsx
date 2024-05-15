@@ -31,13 +31,7 @@ import { useState } from "react";
 import { useSWRConfig } from "swr";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { toast } from "sonner";
-
-const titles = {
-  rent: "Rent a book",
-  status: "Rental status",
-  edit: "Edit book",
-  delete: "Delete book",
-};
+import useDictionary from "@/lib/use-translation";
 
 function BookOptions({ row, rent, adminProps, children }) {
   const { mutate } = useSWRConfig();
@@ -45,6 +39,8 @@ function BookOptions({ row, rent, adminProps, children }) {
   const [open, setOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState("");
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const { t } = useDictionary("options-catalog");
 
   const afterPromise = (data) => {
     mutate("/api/catalog");
@@ -60,7 +56,7 @@ function BookOptions({ row, rent, adminProps, children }) {
     setOpen(false);
 
     toast.promise(editBook(row.id, data), {
-      loading: `Editing book "${data.title}"`,
+      loading: t("editingBook", { title: row.title }),
       success: afterPromise,
       error: afterPromise,
     });
@@ -70,7 +66,7 @@ function BookOptions({ row, rent, adminProps, children }) {
     setOpen(false);
 
     toast.promise(deleteBook(row.id), {
-      loading: `Deleting book "${row.title}"`,
+      loading: t("deletingBook", { title: row.title }),
       success: afterPromise,
       error: afterPromise,
     });
@@ -80,7 +76,7 @@ function BookOptions({ row, rent, adminProps, children }) {
     setOpen(false);
 
     toast.promise(statusUpdate(row.id, data), {
-      loading: `Updating status for "${row.title}"`,
+      loading: t("updatingStatus", { title: row.title }),
       success: afterPromise,
       error: afterPromise,
     });
@@ -89,17 +85,17 @@ function BookOptions({ row, rent, adminProps, children }) {
   if (isDesktop)
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <BookOptionsDropdown setCategory={changeCategory} rentAvailable={rent}>
+        <BookOptionsDropdown setCategory={changeCategory} rentAvailable={rent} t={t}>
           {children}
         </BookOptionsDropdown>
         <DialogContent className={categoryOpen == "status" && "max-w-xl"}>
           <DialogHeader>
-            <DialogTitle>{open ? titles[categoryOpen] : ""}</DialogTitle>
+            <DialogTitle>{open ? t(`titles.${categoryOpen}`) : ""}</DialogTitle>
           </DialogHeader>
           {categoryOpen === "rent" && <RentForm row={row} open={setOpen} />}
           {categoryOpen === "edit" && (
             <BookForm
-              buttonLabel="Edit book"
+              buttonLabel={t("edit.button")}
               onSubmit={onBookEdit}
               defaultValues={{
                 title: row.title,
@@ -115,7 +111,7 @@ function BookOptions({ row, rent, adminProps, children }) {
             <>
               <BookDeleteConfirmation row={row} onSubmit={onBookDelete} />
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline">{t("cancel")}</Button>
               </DialogClose>
             </>
           )}
@@ -132,16 +128,16 @@ function BookOptions({ row, rent, adminProps, children }) {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <BookOptionsDropdown setCategory={changeCategory} rentAvailable={rent}>
+      <BookOptionsDropdown setCategory={changeCategory} rentAvailable={rent} t={t}>
         {children}
       </BookOptionsDropdown>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>{open ? titles[categoryOpen] : ""}</DrawerTitle>
+          <DrawerTitle>{open ? t(`titles.${categoryOpen}`) : ""}</DrawerTitle>
           {categoryOpen === "rent" && <RentForm row={row} open={setOpen} />}
           {categoryOpen === "edit" && (
             <BookForm
-              buttonLabel="Edit book"
+              buttonLabel={t("edit.button")}
               onSubmit={onBookEdit}
               defaultValues={{
                 title: row.title,
@@ -166,7 +162,7 @@ function BookOptions({ row, rent, adminProps, children }) {
         </DrawerHeader>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline">{t("cancel")}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
@@ -174,7 +170,7 @@ function BookOptions({ row, rent, adminProps, children }) {
   );
 }
 
-function BookOptionsDropdown({ children, setCategory, rentAvailable }) {
+function BookOptionsDropdown({ children, setCategory, rentAvailable, t }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>{children}</DropdownMenuTrigger>
@@ -184,15 +180,15 @@ function BookOptionsDropdown({ children, setCategory, rentAvailable }) {
           onClick={() => setCategory("rent")}
         >
           <BookUp2Icon className="mr-2 h-4 w-4" />
-          <span>Rent</span>
+          <span>{t("options.rent")}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setCategory("status")}>
           <InfoIcon className="mr-2 h-4 w-4" />
-          <span>Status</span>
+          <span>{t("options.status")}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setCategory("edit")}>
           <PencilIcon className="mr-2 h-4 w-4" />
-          <span>Edit</span>
+          <span>{t("options.edit")}</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -200,7 +196,7 @@ function BookOptionsDropdown({ children, setCategory, rentAvailable }) {
           onClick={() => setCategory("delete")}
         >
           <Trash2Icon className="mr-2 h-4 w-4" />
-          <span>Delete</span>
+          <span>{t("options.delete")}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

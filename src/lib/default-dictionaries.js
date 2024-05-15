@@ -12,6 +12,8 @@ import catalogColumns from "../../locales/en/catalog-columns.json";
 import booksReturns from "../../locales/en/books-returns.json";
 import statusInformation from "../../locales/en/status-information.json";
 import previousRentals from "../../locales/en/previous-rentals.json";
+import optionsCatalog from "../../locales/en/options-catalog.json";
+import rentBook from "../../locales/en/rent-book.json";
 
 export const dictionaryEn = {
   home,
@@ -28,4 +30,6 @@ export const dictionaryEn = {
   "books-returns": booksReturns,
   "status-information": statusInformation,
   "previous-rentals": previousRentals,
+  "options-catalog": optionsCatalog,
+  "rent-book": rentBook,
 };

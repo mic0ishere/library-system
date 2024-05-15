@@ -28,15 +28,17 @@ import { HelpCircleIcon } from "lucide-react";
 import { useState } from "react";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { useSWRConfig } from "swr";
+import useDictionary from "@/lib/use-translation";
 import { toast } from "sonner";
 
 function BookReturnCard({
-  t,
   book,
   children,
   showReturn = true,
   showDetails = true,
 }) {
+  const { t } = useDictionary("books-returns");
+
   return (
     <Card
       className={`${

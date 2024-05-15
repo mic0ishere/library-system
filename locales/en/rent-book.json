@@ -1,0 +1,12 @@
+{
+    "title": "Rent a book",
+    "cancel": "Cancel",
+    "category": "Category: {0}",
+    "published": "Published: {0}",
+    "pages": "Pages: {0}",
+    "isbn": "ISBN: {0}",
+    "confirm": "Confirm rent",
+    "loading": "Renting book...",
+    "howItWorksTitle": "How it works",
+    "howItWorks": "After taking the book from the bookshelf, click the button below to confirm the rent. The book will be marked as rented and you will have {max} days to return it."
+}

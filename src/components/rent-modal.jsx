@@ -22,10 +22,13 @@ import { useState } from "react";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { useSWRConfig } from "swr";
 import { toast } from "sonner";
+import useDictionary from "@/lib/use-translation";
 
 function RentModal({ row, children }) {
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const { t } = useDictionary("rent-book");
 
   if (isDesktop)
     return (
@@ -33,7 +36,7 @@ function RentModal({ row, children }) {
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Rent a book</DialogTitle>
+            <DialogTitle>{t("title")}</DialogTitle>
           </DialogHeader>
           <RentForm row={row} open={setOpen} />
         </DialogContent>
@@ -45,12 +48,12 @@ function RentModal({ row, children }) {
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>Rent a book</DrawerTitle>
+          <DrawerTitle>{t("title")}</DrawerTitle>
           <RentForm row={row} open={setOpen} />
         </DrawerHeader>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline">{t("cancel")}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
@@ -61,26 +64,28 @@ function RentModal({ row, children }) {
 function RentForm({ row, open }) {
   const { mutate } = useSWRConfig();
 
+  const { t } = useDictionary("rent-book");
+
   return (
     <div className="flex flex-col gap-2">
       <h1 className="text-2xl font-bold">{row.title}</h1>
       <div>
         <p className="text-lg">{row.author}</p>
         <ul className="text-sm text-left mt-4 md:mt-0 md:ml-4 md:list-disc">
-          <li>Category: {row.category}</li>
-          <li>Published: {row.year}</li>
-          <li>Pages: {row.pages}</li>
-          <li>ISBN: {row.isbn}</li>
+          <li>{t("category", row.category)}</li>
+          <li>{t("published", row.year)}</li>
+          <li>{t("pages", row.pages)}</li>
+          <li>{t("isbn", row.isbn)}</li>
         </ul>
       </div>
 
       <Alert variant="info" className="text-left">
         <HelpCircleIcon className="w-5 h-5" />
-        <AlertTitle>How it works</AlertTitle>
+        <AlertTitle>{t("howItWorksTitle")}</AlertTitle>
         <AlertDescription>
-          After taking the book from the bookshelf, click the button below to
-          confirm the rent. The book will be marked as rented and you will have{" "}
-          {process.env.NEXT_PUBLIC_DEFAULTRENTALTIME} days to return it.
+          {t("howItWorks", {
+            max: process.env.NEXT_PUBLIC_DEFAULTRENTALTIME,
+          })}
         </AlertDescription>
       </Alert>
 
@@ -95,13 +100,13 @@ function RentForm({ row, open }) {
           };
 
           toast.promise(rentBook(row.id), {
-            loading: "Renting book...",
+            loading: t("loading"),
             success: afterPromise,
             error: afterPromise,
           });
         }}
       >
-        Rent book
+        {t("confirm")}
       </Button>
     </div>
   );
