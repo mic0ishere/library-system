@@ -1,0 +1,9 @@
+{
+    "title": "Your rented books",
+    "description": "You are currently renting <strong>{current}/{max}</strong> books. You can return them at any time by clicking the return button below.",
+    "published": "Published: {0}",
+    "pages": "Pages: {0}",
+    "isbn": "ISBN: {0}",
+    "dueDate": "Due date",
+    "returnButton": "Return book"
+}

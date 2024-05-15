@@ -31,6 +31,7 @@ import { useSWRConfig } from "swr";
 import { toast } from "sonner";
 
 function BookReturnCard({
+  t,
   book,
   children,
   showReturn = true,
@@ -49,15 +50,15 @@ function BookReturnCard({
         <CardDescription>{book.author}</CardDescription>
         {showDetails && (
           <ul className="text-sm text-left mt-2 ml-4 list-disc text-black dark:text-white">
-            <li>Published: {book.year}</li>
-            <li>Pages: {book.pages}</li>
-            <li>ISBN: {book.isbn}</li>
+            <li>{t("published", book.year)}</li>
+            <li>{t("pages", book.pages)}</li>
+            <li>{t("isbn", book.isbn)}</li>
           </ul>
         )}
       </CardHeader>
       <CardContent>
         <p className={book.due < 0 ? "text-red-500" : ""}>
-          <strong>Due date:</strong> {new Date(book.dueDate).toDateString()} (
+          <strong>{t("dueDate")}:</strong> {new Date(book.dueDate).toDateString()} (
           {book.due === 0
             ? "today"
             : new Intl.RelativeTimeFormat("en").format(book.due, "day")}
@@ -66,7 +67,7 @@ function BookReturnCard({
         {showReturn && (
           <ReturnModal book={book}>
             <Button variant="outline" className="w-full mt-4">
-              Return book
+              {t("returnButton")}
             </Button>
           </ReturnModal>
         )}

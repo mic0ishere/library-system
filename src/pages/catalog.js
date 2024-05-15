@@ -8,7 +8,7 @@ import { SWRConfig } from "swr";
 import BooksCatalog from "@/components/books-catalog";
 import AddNewBookModal from "@/components/add-new-book";
 
-import { columns } from "@/components/catalog-columns";
+import { useColumns } from "@/components/catalog-columns";
 
 import { getSession } from "next-auth/react";
 import isAdmin from "@/lib/is-admin";
@@ -19,6 +19,7 @@ import PageTitle from "@/components/page-title";
 
 export default function Catalog({ booksStr, isAdmin, adminProps }) {
   const { t, hasLoaded } = useDictionary("catalog");
+  const columns = useColumns(isAdmin, adminProps && JSON.parse(adminProps));
 
   return (
     <div
@@ -67,9 +68,7 @@ export default function Catalog({ booksStr, isAdmin, adminProps }) {
             </Button>
           </div>
         )}
-        <BooksCatalog
-          columns={columns(isAdmin, adminProps && JSON.parse(adminProps))}
-        />
+        <BooksCatalog columns={columns} />
       </SWRConfig>
     </div>
   );

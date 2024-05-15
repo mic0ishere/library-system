@@ -4,6 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import BookReturnCard from "@/components/return-card";
 import BookAlerts from "@/components/overdue-alerts";
 import dateDifference from "@/lib/date-difference";
+import useDictionary from "@/lib/use-translation";
 
 function BooksReturns() {
   const { data, error } = useSWR("/api/catalog/my", (...args) =>
@@ -17,16 +18,20 @@ function BooksReturns() {
     }))
     .sort((a, b) => a.due - b.due);
 
+  const { t } = useDictionary("books-returns");
+
   return (
     <>
-      <p className="mt-2 mb-4">
-        You are currently renting{" "}
-        <strong>
-          {books.length}/{process.env.NEXT_PUBLIC_MAXRENTALS}
-        </strong>{" "}
-        books. You can return them at any time by clicking the return button
-        below.
-      </p>
+      <h1 className="text-4xl">{t("title")}</h1>
+      <p
+        className="mt-2 mb-4"
+        dangerouslySetInnerHTML={{
+          __html: t("description", {
+            current: books.length,
+            max: process.env.NEXT_PUBLIC_MAXRENTALS,
+          }),
+        }}
+      ></p>
       <BookAlerts books={books} showCatalog={books.length === 0} />
       {error && (
         <Alert variant="destructive">
@@ -35,9 +40,11 @@ function BooksReturns() {
         </Alert>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-8">
-        {books.map((book) => (
-          <BookReturnCard key={book.id} book={book} />
-        ))}
+        {books
+          .filter((book) => typeof book.due === "number")
+          .map((book) => (
+            <BookReturnCard key={book.id} book={book} t={t} />
+          ))}
       </div>
     </>
   );

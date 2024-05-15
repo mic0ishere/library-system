@@ -1,0 +1,5 @@
+{
+    "alertTitle": "Are you sure you want to delete this book?",
+    "alertDescription": "This action cannot be undone. All data related to this book will be permanently deleted.",
+    "deleteBook": "Delete book"
+}

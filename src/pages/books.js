@@ -13,7 +13,6 @@ export default function Books({ userStr }) {
         user.books.length > 0 ? "max-w-[900px]" : "max-w-[600px]"
       }`}
     >
-      <h1 className="text-4xl">Your rented books</h1>
       <SWRConfig value={{ fallback: { "/api/catalog/my": user.books } }}>
         <BooksReturns />
       </SWRConfig>
@@ -35,7 +34,11 @@ export async function getServerSideProps(context) {
       email: session.user.email,
     },
     include: {
-      books: true,
+      books: {
+        where: {
+          status: "RENTED",
+        },
+      },
     },
   });
 

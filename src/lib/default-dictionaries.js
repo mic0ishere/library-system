@@ -5,6 +5,11 @@ import navbar from "../../locales/en/navbar.json";
 import signIn from "../../locales/en/sign-in.json";
 import dataTable from "../../locales/en/data-table.json";
 import statuses from "../../locales/en/statuses.json";
+import addNewBook from "../../locales/en/add-new-book.json";
+import bookForm from "../../locales/en/book-form.json";
+import bookDelete from "../../locales/en/book-delete.json";
+import catalogColumns from "../../locales/en/catalog-columns.json";
+import booksReturns from "../../locales/en/books-returns.json";
 
 export const dictionaryEn = {
   home,
@@ -13,5 +18,10 @@ export const dictionaryEn = {
   navbar,
   "sign-in": signIn,
   "data-table": dataTable,
-  statuses
+  statuses,
+  "add-new-book": addNewBook,
+  "book-form": bookForm,
+  "book-delete": bookDelete,
+  "catalog-columns": catalogColumns,
+  "books-returns": booksReturns,
 };

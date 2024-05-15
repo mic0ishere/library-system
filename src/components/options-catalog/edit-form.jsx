@@ -13,6 +13,7 @@ import { joiResolver } from "@hookform/resolvers/joi";
 import { bookSchema } from "@/lib/book-schema";
 
 import { Button } from "@/components/ui/button";
+import useDictionary from "@/lib/use-translation";
 
 function BookForm({
   buttonLabel,
@@ -31,29 +32,31 @@ function BookForm({
     defaultValues,
   });
 
+  const { t, hasLoaded } = useDictionary("book-form");
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-2">
           <Field form={form} name="title">
-            Title
+            {t("title")}
           </Field>
           <Field form={form} name="author">
-            Author
+            {t("author")}
           </Field>
           <Field form={form} name="category">
-            Category
+            {t("category")}
           </Field>
           <div className="w-full flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <Field form={form} name="year">
-              Publishing year
+              {t("year")}
             </Field>
             <Field form={form} name="pages" type="number">
-              Pages count
+              {t("pages")}
             </Field>
           </div>
           <Field form={form} name="isbn">
-            ISBN
+            {t("isbn")}
           </Field>
         </div>
         <Button className="w-full mt-4" type="submit">

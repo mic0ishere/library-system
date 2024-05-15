@@ -22,11 +22,14 @@ import { useSWRConfig } from "swr";
 import { toast } from "sonner";
 
 import BookForm from "@/components/options-catalog/edit-form";
+import useDictionary from "@/lib/use-translation";
 
 function AddNewBookModal({ children }) {
   const { mutate } = useSWRConfig();
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
+
+  const { t, hasLoaded } = useDictionary("add-new-book");
 
   const onSubmit = async (data) => {
     setOpen(false);
@@ -37,7 +40,7 @@ function AddNewBookModal({ children }) {
     };
 
     toast.promise(addNewBook(data), {
-      loading: "Adding new book...",
+      loading: t("loadingBook"),
       success: afterPromise,
       error: afterPromise,
     });
@@ -49,9 +52,9 @@ function AddNewBookModal({ children }) {
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>New book</DialogTitle>
+            <DialogTitle>{t("newBook")}</DialogTitle>
           </DialogHeader>
-          <BookForm buttonLabel="Add to catalog" onSubmit={onSubmit} />
+          <BookForm buttonLabel={t("addToCatalog")} onSubmit={onSubmit} />
         </DialogContent>
       </Dialog>
     );
@@ -61,12 +64,12 @@ function AddNewBookModal({ children }) {
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader>
-          <DrawerTitle>New book</DrawerTitle>
-          <BookForm buttonLabel="Add to catalog" onSubmit={onSubmit} />
+          <DrawerTitle>{t("newBook")}</DrawerTitle>
+          <BookForm buttonLabel={t("addToCatalog")} onSubmit={onSubmit} />
         </DrawerHeader>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline">{t("cancel")}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
