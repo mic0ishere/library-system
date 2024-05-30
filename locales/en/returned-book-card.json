@@ -1,0 +1,10 @@
+{
+    "rentedBy": "Rented by",
+    "unknownUser": "Unknown user",
+    "rented": "Rented",
+    "returned": "Returned",
+    "due": "Due",
+    "confirmReturn": "Confirm return",
+    "loadingReturn": "Confirming return of {0}...",
+    "viewUser": "View user"
+}

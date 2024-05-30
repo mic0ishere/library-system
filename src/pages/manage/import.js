@@ -15,10 +15,10 @@ import {
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { addNewBook } from "@/components/add-new-book";
 
 import { useState } from "react";
 import { getSession } from "next-auth/react";
+import useDictionary from "@/lib/use-translation";
 import isAdmin from "@/lib/is-admin";
 
 import Joi from "joi";
@@ -32,10 +32,12 @@ export default function ManageReturns() {
   const [books, setBooks] = useState([]);
   const [error, setError] = useState(null);
 
+  const { t } = useDictionary("import-books");
+
   async function handleFileChange(e) {
     setDragging(false);
 
-    const file = e.target?.files[0] || e.dataTransfer?.files[0]; 
+    const file = e.target?.files[0] || e.dataTransfer?.files[0];
 
     const reader = new FileReader();
     reader.readAsText(file);
@@ -91,11 +93,8 @@ export default function ManageReturns() {
 
   return (
     <div className="w-full pt-8 pb-16 max-w-[900px]">
-      <h1 className="text-4xl">Import Books from a CSV file</h1>
-      <p className="mt-2 mb-4">
-        By importing a CSV file, you can add multiple books to the catalog at
-        once.
-      </p>
+      <h1 className="text-4xl">{t("title")}</h1>
+      <p className="mt-2 mb-4">{t("description")}</p>
       <Input
         type="file"
         accept=".csv, .txt, text/csv"
@@ -133,32 +132,45 @@ export default function ManageReturns() {
               };
 
               toast.promise(importBooks(booksToBeAdded), {
-                loading: `Adding ${booksToBeAdded.length} to the catalog...`,
+                loading: t("loadingAddBooks", booksToBeAdded.length),
                 success: afterPromise,
                 error: afterPromise,
               });
             }}
           >
-            <FolderUpIcon className="size-5 mr-2" /> Import{" "}
+            <FolderUpIcon className="size-5 mr-2" />
+            {t("import")}{" "}
             <div className="mx-1 flex flex-row items-center text-green-600 dark:text-green-500">
               <CheckCircle2Icon className="size-4 mr-1" />
-              <span>Ready</span>
+              <span>{t("ready")}</span>
             </div>{" "}
-            books to the catalog
+            {t("booksToCatalog")}
           </Button>
         )}
       {books?.length > 0 && (
         <Table className="mt-8">
           <TableHeader>
             <TableRow>
-              <TableHead className="h-10 min-w-[100px]">Status</TableHead>
-              <TableHead className="h-10 min-w-[200px]">Title</TableHead>
-              <TableHead className="h-10 min-w-[200px]">Author</TableHead>
-              <TableHead className="h-10 min-w-[150px]">Category</TableHead>
-              <TableHead className="h-10 min-w-[80px]">Year</TableHead>
-              <TableHead className="h-10 min-w-[80px]">Pages</TableHead>
+              <TableHead className="h-10 min-w-[100px]">
+                {t("table.status")}
+              </TableHead>
+              <TableHead className="h-10 min-w-[200px]">
+                {t("table.title")}
+              </TableHead>
+              <TableHead className="h-10 min-w-[200px]">
+                {t("table.author")}
+              </TableHead>
+              <TableHead className="h-10 min-w-[150px]">
+                {t("table.category")}
+              </TableHead>
+              <TableHead className="h-10 min-w-[80px]">
+                {t("table.year")}
+              </TableHead>
+              <TableHead className="h-10 min-w-[80px]">
+                {t("table.pages")}
+              </TableHead>
               <TableHead className="h-10 min-w-[100px] text-right">
-                ISBN
+                {t("table.isbn")}
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -169,13 +181,13 @@ export default function ManageReturns() {
                   {success ? (
                     <div className="flex flex-row text-green-600 dark:text-green-500">
                       <CheckCircle2Icon className="size-5 mr-1.5" />
-                      <span>Ready</span>
+                      <span>{t("book.ready")}</span>
                     </div>
                   ) : (
                     <Tooltip>
                       <TooltipTrigger className="flex flex-row underline underline-offset-1 decoration-dashed font-semibold text-red-600 dark:text-red-400">
                         <AlertCircleIcon className="size-5 mr-1.5" />
-                        <span>Errors</span>
+                        <span>{t("book.errors")}</span>
                       </TooltipTrigger>
                       <TooltipContent side="bottom" className="text-red-500">
                         <ul>

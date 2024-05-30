@@ -11,8 +11,11 @@ import Link from "next/link";
 
 import dateDifference from "@/lib/date-difference";
 import { toast } from "sonner";
+import useDictionary from "@/lib/use-translation";
 
 function ReturnedBookCard({ book, showUser = true, setBooks, books }) {
+  const { t } = useDictionary("returned-book-card");
+
   async function confirmBook() {
     try {
       const response = await (
@@ -45,14 +48,16 @@ function ReturnedBookCard({ book, showUser = true, setBooks, books }) {
         <CardTitle className="text-xl">{book.title}</CardTitle>
         {showUser && (
           <CardDescription>
-            <span className="font-semibold">Rented by:</span>{" "}
-            {book?.rentedBy?.name || "Unknown user"}
+            <span className="font-semibold">{t("rentedBy")}:</span>{" "}
+            {book?.rentedBy?.name || t("unknownUser")}
           </CardDescription>
         )}
         <ul className="text-sm ml-4 md:list-disc">
-          <li>Rented: {new Date(book.rentedAt).toLocaleDateString()}</li>
           <li>
-            Returned:{" "}
+            {t("rented")}: {new Date(book.rentedAt).toLocaleDateString()}
+          </li>
+          <li>
+            {t("returned")}:{" "}
             <span
               className={
                 dateDifference(book.returnedAt, book.dueDate) > 0 &&
@@ -62,7 +67,9 @@ function ReturnedBookCard({ book, showUser = true, setBooks, books }) {
               {new Date(book.returnedAt).toLocaleDateString()}
             </span>
           </li>
-          <li>Due: {new Date(book.dueDate).toLocaleDateString()}</li>
+          <li>
+            {t("due")}: {new Date(book.dueDate).toLocaleDateString()}
+          </li>
         </ul>
       </CardHeader>
       <CardContent>
@@ -73,18 +80,18 @@ function ReturnedBookCard({ book, showUser = true, setBooks, books }) {
             e.target.disabled = true;
 
             toast.promise(confirmBook(book.id), {
-              loading: `Confirming return of ${book.title}...`,
+              loading: t("loadingReturn", book.title),
               success: (data) => data.message,
               error: (data) => data.message,
             });
           }}
         >
-          Confirm return
+          {t("confirmReturn")}
         </Button>
         {showUser && (
           <Link href={`/manage/users/${book?.rentedBy?.userId || ""}`}>
             <Button className="w-full mt-2" variant="outline" size="sm">
-              View user <ExternalLinkIcon className="ml-1 h-4 w-4" />
+              {t("viewUser")} <ExternalLinkIcon className="ml-1 h-4 w-4" />
             </Button>
           </Link>
         )}

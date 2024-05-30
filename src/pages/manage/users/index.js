@@ -22,30 +22,28 @@ import { ExternalLinkIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 
 import { useState } from "react";
+import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
 import isAdmin from "@/lib/is-admin";
 import prisma from "@/lib/prisma";
 import dateDifference from "@/lib/date-difference";
-import { useRouter } from "next/router";
 import formatEmail from "@/lib/format-email";
+import useDictionary from "@/lib/use-translation";
 
 export default function ManageUsers({ usersStr }) {
   const users = JSON.parse(usersStr);
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
+  const { t } = useDictionary("manage-users");
+
   return (
     <div className="w-full pt-8 pb-16 max-w-[900px]">
-      <h1 className="text-4xl">Manage users</h1>
-      <p className="mt-2 mb-4">
-        Here, you can see and search the users that are currently registered in
-        the system, and manage their status.
-      </p>
+      <h1 className="text-4xl">{t("title")}</h1>
+      <p className="mt-2 mb-4">{t("description")}</p>
       {users.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-lg text-neutral-500">
-            There are no users registered in the system.
-          </p>
+          <p className="text-lg text-neutral-500">{t("noUsers")}</p>
         </div>
       )}
       <Popover open={open} onOpenChange={setOpen}>
@@ -58,15 +56,15 @@ export default function ManageUsers({ usersStr }) {
               aria-controls="user-select"
               aria-expanded={open}
             >
-              Search users
+              {t("search")}
               <SearchIcon className="ml-2 h-4 w-4 opacity-70" />
             </Button>
           </PopoverTrigger>
         </div>
         <PopoverContent className="p-0">
           <Command>
-            <CommandInput placeholder="Search users..." />
-            <CommandEmpty>No user found.</CommandEmpty>
+            <CommandInput placeholder={`${t("search")}...`} />
+            <CommandEmpty>{t("noFound")}</CommandEmpty>
             <CommandGroup>
               {users.map((user) => (
                 <CommandItem
@@ -101,7 +99,9 @@ export default function ManageUsers({ usersStr }) {
                 <div className="grid grid-cols-2 w-full items-center justify-center">
                   <div>
                     <h1 className="text-2xl font-bold">{user.books.length}</h1>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">Rented</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                      {t("rentedBooks")}
+                    </p>
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold">
@@ -111,12 +111,15 @@ export default function ManageUsers({ usersStr }) {
                         ).length
                       }
                     </h1>
-                    <p className="text-sm text-neutral-600 dark:text-neutral-400">Overdue</p>
+                    <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                      {t("overdueBooks")}
+                    </p>
                   </div>
                 </div>
                 <Link href={`/manage/users/${user.userId}`}>
                   <Button className="w-full mt-2" variant="outline" size="sm">
-                    View user <ExternalLinkIcon className="ml-1 h-4 w-4" />
+                    {t("viewUser")}{" "}
+                    <ExternalLinkIcon className="ml-1 h-4 w-4" />
                   </Button>
                 </Link>
               </CardContent>

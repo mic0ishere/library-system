@@ -14,6 +14,11 @@ import statusInformation from "../../locales/en/status-information.json";
 import previousRentals from "../../locales/en/previous-rentals.json";
 import optionsCatalog from "../../locales/en/options-catalog.json";
 import rentBook from "../../locales/en/rent-book.json";
+import returnedBookCard from "../../locales/en/returned-book-card.json";
+import manageUsersSearch from "../../locales/en/manage-users-search.json";
+import manageUser from "../../locales/en/manage-user.json";
+import importBooks from "../../locales/en/import-books.json";
+import manageReturns from "../../locales/en/manage-returns.json";
 
 export const dictionaryEn = {
   home,
@@ -32,4 +37,9 @@ export const dictionaryEn = {
   "previous-rentals": previousRentals,
   "options-catalog": optionsCatalog,
   "rent-book": rentBook,
+  "returned-book-card": returnedBookCard,
+  "manage-users": manageUsersSearch,
+  "manage-user": manageUser,
+  "import-books": importBooks,
+  "manage-returns": manageReturns,
 };

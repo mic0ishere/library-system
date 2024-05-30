@@ -12,11 +12,14 @@ import prisma from "@/lib/prisma";
 
 import { toast } from "sonner";
 import dateDifference from "@/lib/date-difference";
+import useDictionary from "@/lib/use-translation";
 
 export default function ManageUser({ isAdmin, userStr }) {
   const [user, setUser] = useState(JSON.parse(userStr));
 
   const [books, setBooks] = useState(user.books);
+
+  const { t } = useDictionary("manage-user");
 
   const rentedBooks = books
     .filter((book) => book.status === "RENTED")
@@ -75,7 +78,7 @@ export default function ManageUser({ isAdmin, userStr }) {
     e.target.disabled = true;
 
     toast.promise(updateData(`/api/users/prolongate?bookId=${book.id}`), {
-      loading: `Prolongating ${book.title}...`,
+      loading: t("loadingProlongate", book.title),
       success: (result) => {
         swapBook({
           ...book,
@@ -102,7 +105,7 @@ export default function ManageUser({ isAdmin, userStr }) {
         status: "BACK_SOON",
       }),
       {
-        loading: `Returning ${book.title}...`,
+        loading: t("loadingReturn", book.title),
         success: (data) => {
           swapBook({
             ...book,
@@ -124,7 +127,7 @@ export default function ManageUser({ isAdmin, userStr }) {
 
   return (
     <div className="w-full pt-8 pb-16 max-w-[900px]">
-      <h1 className="text-4xl">Manage user</h1>
+      <h1 className="text-4xl">{t("title")}</h1>
       <div className="flex flex-row mt-2">
         <h2 className="text-2xl text-neutral-500 font-medium">{user.name}</h2>
         <Badge
@@ -133,24 +136,29 @@ export default function ManageUser({ isAdmin, userStr }) {
           }
           className="ml-2"
         >
-          {isAdmin ? "Admin" : user.isBanned ? "Banned" : "User"}
+          {isAdmin
+            ? t("role.admin")
+            : user.isBanned
+            ? t("role.banned")
+            : t("role.user")}
         </Badge>
       </div>
       <div className="mt-4 text-lg [&_span]:text-neutral-500">
         <p>
-          <span>Rented books:</span> {rentedBooks.length}
+          <span>{t("books.rented")}</span> {rentedBooks.length}
         </p>
         <p>
-          <span>Overdue books:</span> {overdueBooks.length}
+          <span>{t("books.overdue")}</span> {overdueBooks.length}
         </p>
         <p>
-          <span>Total rentals:</span> {user.previousRentals.length}
+          <span>{t("books.total")}:</span> {user.previousRentals.length}
         </p>
         <p>
-          <span>Registered:</span> {new Date(user.createdAt).toLocaleString()}
+          <span>{t("registeredAt")}:</span>{" "}
+          {new Date(user.createdAt).toLocaleString()}
         </p>
         <p>
-          <span>Email: </span>
+          <span>{t("email")}: </span>
           {user.email}
         </p>
         <Button
@@ -161,9 +169,10 @@ export default function ManageUser({ isAdmin, userStr }) {
             e.target.disabled = true;
 
             toast.promise(updateData(`/api/users/ban?userId=${user.userId}`), {
-              loading: `${user.isBanned ? "Unbanning" : "Banning"} ${
+              loading: t(
+                user.isBanned ? "loadingUnban" : "loadingBan",
                 user.name
-              }...`,
+              ),
               success: (data) => {
                 setUser({
                   ...user,
@@ -177,14 +186,17 @@ export default function ManageUser({ isAdmin, userStr }) {
           }}
         >
           <GavelIcon className="w-5 h-5 mr-2" />
-          {user.isBanned ? "Unban" : "Ban"} user
+          {user.isBanned ? t("unbanUser") : t("banUser")}
         </Button>
       </div>
-      <h2 className="text-2xl mt-12">Rented books ({rentedBooks.length})</h2>
+      <h2 className="text-2xl mt-12">
+        {t("rentedTitle")} ({rentedBooks.length})
+      </h2>
       {overdueBooks.length > 0 && (
         <p className="text-lg text-red-500 font-semibold">
-          {overdueBooks.length} overdue{" "}
-          {overdueBooks.length === 1 ? "book" : "books"}
+          {t(overdueBooks.length === 1 ? "overdueOne" : "overdueMany", {
+            count: overdueBooks.length,
+          })}
         </p>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-4">
@@ -202,7 +214,9 @@ export default function ManageUser({ isAdmin, userStr }) {
                   className="w-full"
                   onClick={(e) => onProlongateClick(e, book)}
                 >
-                  Prolongate by {process.env.NEXT_PUBLIC_PROLONGATIONTIME} days
+                  {t("prolongateBook", {
+                    days: process.env.NEXT_PUBLIC_PROLONGATIONTIME,
+                  })}
                   <CalendarClockIcon className="w-5 h-5 ml-2" />
                 </Button>
                 <Button
@@ -210,18 +224,18 @@ export default function ManageUser({ isAdmin, userStr }) {
                   className="w-full"
                   onClick={(e) => onReturnClick(e, book)}
                 >
-                  Return book
+                  {t("returnBook")}
                   <BookCheckIcon className="w-5 h-5 ml-2" />
                 </Button>
               </div>
             </BookReturnCard>
           ))}
         {rentedBooks.length === 0 && (
-          <p className="text-lg text-neutral-500 mb-8">No rented books</p>
+          <p className="text-lg text-neutral-500 mb-8">{t("noRentedBooks")}</p>
         )}
       </div>
       <h2 className="text-2xl mt-12">
-        Returned books ({returnedBooks.length})
+        {t("returnedTitle")} ({returnedBooks.length})
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full mt-4">
         {returnedBooks.length > 0 &&
@@ -235,11 +249,13 @@ export default function ManageUser({ isAdmin, userStr }) {
             />
           ))}
         {returnedBooks.length === 0 && (
-          <p className="text-lg text-neutral-500 mb-8">No returned books</p>
+          <p className="text-lg text-neutral-500 mb-8">
+            {t("noReturnedBooks")}
+          </p>
         )}
       </div>
       <h2 className="text-2xl mt-12 pb-4">
-        Previous rentals ({user.previousRentals.length})
+        {t("previousTitle")} ({user.previousRentals.length})
       </h2>
       <PreviousRentalsTable
         maxHeight="80vh"

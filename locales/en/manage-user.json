@@ -1,0 +1,30 @@
+{
+    "title": "Manage user",
+    "role.admin": "Admin",
+    "role.user": "User",
+    "role.banned": "Banned",
+    "books.rented": "Rented books",
+    "books.overdue": "Overdue books",
+    "books.total": "Total rentals",
+    "registeredAt": "Registered",
+    "email": "Email",
+    "banUser": "Ban user",
+    "unbanUser": "Unban user",
+
+    "rentedTitle": "Rented books",
+    "overdueOne": "{count} overdue book",
+    "overdueMany": "{count} overdue books",
+    "prolongateBook": "Prolongate by {days} days",
+    "returnBook": "Return book",
+    "noRentedBooks": "No rented books",
+
+    "returnedTitle": "Returned books",
+    "noReturnedBooks": "No returned books",
+
+    "previousTitle": "Previous rentals",
+
+    "loadingProlongate": "Prolongating {0}...",
+    "loadingReturn": "Returning {0}...",
+    "loadingBan": "Banning {0}...",
+    "loadingUnban": "Unbanning {0}..."
+}

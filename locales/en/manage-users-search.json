@@ -1,0 +1,10 @@
+{
+    "title": "Manage users",
+    "description": "Here, you can see and search the users that are currently registered in the system, and manage their status.",
+    "noUsers": "There are no users registered in the system.",
+    "search": "Search users",
+    "noFound": "No user found.",
+    "rentedBooks": "Rented",
+    "overdueBooks": "Overdue",
+    "viewUser": "View user"
+}

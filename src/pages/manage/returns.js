@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import ReturnedBookCard from "@/components/returned-book-card";
 import { ExternalLinkIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -14,7 +15,7 @@ import { getSession } from "next-auth/react";
 import isAdmin from "@/lib/is-admin";
 import prisma from "@/lib/prisma";
 import dateDifference from "@/lib/date-difference";
-import ReturnedBookCard from "@/components/returned-book-card";
+import useDictionary from "@/lib/use-translation";
 
 export default function ManageReturns({ confirmationStr, overdueStr }) {
   const [confirmationBooks, setConfirmationBooks] = useState(
@@ -22,20 +23,16 @@ export default function ManageReturns({ confirmationStr, overdueStr }) {
   );
   const overdueBooks = JSON.parse(overdueStr);
 
+  const { t } = useDictionary("manage-returns");
+
   return (
     <div className="w-full pt-8 pb-16 max-w-[900px]">
-      <h1 className="text-4xl">Manage book statuses</h1>
-      <p className="mt-2 mb-4">
-        Here, you can see the books that were marked as returned by the users
-        and are waiting for your confirmation on their status in order to be
-        available in the catalog again.
-      </p>
+      <h1 className="text-4xl">{t("title")}</h1>
+      <p className="mt-2 mb-4">{t("description")}</p>
       {confirmationBooks.length === 0 && (
         <div className="text-center py-12">
-          <h1 className="text-2xl font-semibold">Congratulations!</h1>
-          <p className="text-lg">
-            There are no books waiting for confirmation at the moment.
-          </p>
+          <h1 className="text-2xl font-semibold">{t("noBooks.title")}</h1>
+          <p className="text-lg">{t("noBooks.description")}</p>
         </div>
       )}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full mt-4">
@@ -51,11 +48,8 @@ export default function ManageReturns({ confirmationStr, overdueStr }) {
       </div>
       {overdueBooks.length > 0 && (
         <>
-          <h2 className="text-2xl mt-8">Overdue books</h2>
-          <p className="mt-2 mb-4">
-            Here, you can see the books that are currently rented and are
-            overdue.
-          </p>
+          <h2 className="text-2xl mt-8">{t("overdueBooks.title")}</h2>
+          <p className="mt-2 mb-4">{t("overdueBooks.description")}</p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full mt-4">
             {overdueBooks
               .sort((a, b) => dateDifference(a.dueDate, b.dueDate))
@@ -67,15 +61,17 @@ export default function ManageReturns({ confirmationStr, overdueStr }) {
                   <CardHeader className="pb-3">
                     <CardTitle className="text-xl">{book.title}</CardTitle>
                     <CardDescription>
-                      <span className="font-semibold">Rented by:</span>{" "}
+                      <span className="font-semibold">{t("rentedBy")}:</span>{" "}
                       {book.rentedBy.name}
                     </CardDescription>
                     <ul className="text-sm ml-4 md:list-disc">
                       <li>
-                        Rented: {new Date(book.rentedAt).toLocaleDateString()}
+                        {t("rentedAt")}:{" "}
+                        {new Date(book.rentedAt).toLocaleDateString()}
                       </li>
                       <li>
-                        Due: {new Date(book.dueDate).toLocaleDateString()} (
+                        {t("dueAt")}:{" "}
+                        {new Date(book.dueDate).toLocaleDateString()} (
                         <span className="font-semibold">
                           {new Intl.RelativeTimeFormat("en").format(
                             dateDifference(book.dueDate, Date.now()),
@@ -93,7 +89,8 @@ export default function ManageReturns({ confirmationStr, overdueStr }) {
                       rel="noopener noreferrer"
                     >
                       <Button className="w-full" variant="outline" size="sm">
-                        View user <ExternalLinkIcon className="ml-1 h-4 w-4" />
+                        {t("viewUser")}{" "}
+                        <ExternalLinkIcon className="ml-1 h-4 w-4" />
                       </Button>
                     </Link>
                   </CardContent>

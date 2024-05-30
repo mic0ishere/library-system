@@ -1,0 +1,12 @@
+{
+    "title": "Manage book statuses",
+    "description": "Here, you can see the books that were marked as returned by the users and are waiting for your confirmation on their status in order to be available in the catalog again.",
+    "noBooks.title": "Congratulations!",
+    "noBooks.description": "There are no books waiting for confirmation at the moment.",
+    "overdueBooks.title": "Overdue books",
+    "overdueBooks.description": "Here, you can see the books that are currently rented and are overdue.",
+    "rentedBy": "Rented by",
+    "rentedAt": "Rented",
+    "dueAt": "Due",
+    "viewUser": "View user"
+}

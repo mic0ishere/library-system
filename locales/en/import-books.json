@@ -1,0 +1,17 @@
+{
+    "title": "Import Books from a CSV file",
+    "description": "By importing a CSV file, you can add multiple books to the catalog at once.",
+    "import": "Import",
+    "ready": "Ready",
+    "booksToCatalog": "books to the catalog",
+    "table.status": "Status",
+    "table.title": "Title",
+    "table.author": "Author",
+    "table.category": "Category",
+    "table.year": "Year",
+    "table.pages": "Pages",
+    "table.isbn": "ISBN",
+    "book.ready": "Ready",
+    "book.errors": "Errors",
+    "loadingAddBooks": "Adding {0} books to the catalog..."
+}
