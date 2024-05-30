@@ -29,6 +29,7 @@ import prisma from "@/lib/prisma";
 import dateDifference from "@/lib/date-difference";
 import formatEmail from "@/lib/format-email";
 import useDictionary from "@/lib/use-translation";
+import PageTitle from "@/components/page-title";
 
 export default function ManageUsers({ usersStr }) {
   const users = JSON.parse(usersStr);
@@ -39,6 +40,7 @@ export default function ManageUsers({ usersStr }) {
 
   return (
     <div className="w-full pt-8 pb-16 max-w-[900px]">
+      <PageTitle>{t("pageTitle")}</PageTitle>
       <h1 className="text-4xl">{t("title")}</h1>
       <p className="mt-2 mb-4">{t("description")}</p>
       {users.length === 0 && (

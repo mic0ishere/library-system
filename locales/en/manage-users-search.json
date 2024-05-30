@@ -1,4 +1,5 @@
 {
+    "pageTitle": "Manage users",
     "title": "Manage users",
     "description": "Here, you can see and search the users that are currently registered in the system, and manage their status.",
     "noUsers": "There are no users registered in the system.",

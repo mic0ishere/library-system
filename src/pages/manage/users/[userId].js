@@ -13,6 +13,7 @@ import prisma from "@/lib/prisma";
 import { toast } from "sonner";
 import dateDifference from "@/lib/date-difference";
 import useDictionary from "@/lib/use-translation";
+import PageTitle from "@/components/page-title";
 
 export default function ManageUser({ isAdmin, userStr }) {
   const [user, setUser] = useState(JSON.parse(userStr));
@@ -127,6 +128,11 @@ export default function ManageUser({ isAdmin, userStr }) {
 
   return (
     <div className="w-full pt-8 pb-16 max-w-[900px]">
+      <PageTitle>
+        {t("pageTitle", {
+          user: user.name,
+        })}
+      </PageTitle>
       <h1 className="text-4xl">{t("title")}</h1>
       <div className="flex flex-row mt-2">
         <h2 className="text-2xl text-neutral-500 font-medium">{user.name}</h2>

@@ -25,6 +25,7 @@ import Joi from "joi";
 import { bookSchema } from "@/lib/book-schema";
 import { parse } from "csv-parse/sync";
 import { toast } from "sonner";
+import PageTitle from "@/components/page-title";
 
 export default function ManageReturns() {
   const [dragging, setDragging] = useState(false);
@@ -93,6 +94,7 @@ export default function ManageReturns() {
 
   return (
     <div className="w-full pt-8 pb-16 max-w-[900px]">
+      <PageTitle>{t("pageTitle")}</PageTitle>
       <h1 className="text-4xl">{t("title")}</h1>
       <p className="mt-2 mb-4">{t("description")}</p>
       <Input

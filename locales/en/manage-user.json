@@ -1,4 +1,5 @@
 {
+    "pageTitle": "{user}",
     "title": "Manage user",
     "role.admin": "Admin",
     "role.user": "User",

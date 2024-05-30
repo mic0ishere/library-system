@@ -1,4 +1,5 @@
 {
+    "pageTitle": "My books",
     "title": "Your rented books",
     "description": "You are currently renting <strong>{current}/{max}</strong> books. You can return them at any time by clicking the return button below.",
     "published": "Published: {0}",

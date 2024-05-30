@@ -16,6 +16,7 @@ import isAdmin from "@/lib/is-admin";
 import prisma from "@/lib/prisma";
 import dateDifference from "@/lib/date-difference";
 import useDictionary from "@/lib/use-translation";
+import PageTitle from "@/components/page-title";
 
 export default function ManageReturns({ confirmationStr, overdueStr }) {
   const [confirmationBooks, setConfirmationBooks] = useState(
@@ -27,6 +28,7 @@ export default function ManageReturns({ confirmationStr, overdueStr }) {
 
   return (
     <div className="w-full pt-8 pb-16 max-w-[900px]">
+      <PageTitle>{t("pageTitle")}</PageTitle>
       <h1 className="text-4xl">{t("title")}</h1>
       <p className="mt-2 mb-4">{t("description")}</p>
       {confirmationBooks.length === 0 && (

@@ -5,6 +5,7 @@ import BookReturnCard from "@/components/return-card";
 import BookAlerts from "@/components/overdue-alerts";
 import dateDifference from "@/lib/date-difference";
 import useDictionary from "@/lib/use-translation";
+import PageTitle from "./page-title";
 
 function BooksReturns() {
   const { data, error } = useSWR("/api/catalog/my", (...args) =>
@@ -22,6 +23,7 @@ function BooksReturns() {
 
   return (
     <>
+      <PageTitle>{t("pageTitle")}</PageTitle>
       <h1 className="text-4xl">{t("title")}</h1>
       <p
         className="mt-2 mb-4"

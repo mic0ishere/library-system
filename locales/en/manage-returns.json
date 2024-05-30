@@ -1,4 +1,5 @@
 {
+    "pageTitle": "Returns",
     "title": "Manage book statuses",
     "description": "Here, you can see the books that were marked as returned by the users and are waiting for your confirmation on their status in order to be available in the catalog again.",
     "noBooks.title": "Congratulations!",
