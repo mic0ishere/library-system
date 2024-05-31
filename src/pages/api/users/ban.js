@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
+import getTranslate from "@/lib/api-translation";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -15,11 +16,13 @@ export default async function handler(req, res) {
     return;
   }
 
+  const t = await getTranslate(req, "ban");
+
   if (req.method === "PATCH") {
     const { userId } = req.query;
     if (!userId) {
       res.status(400).json({
-        message: "User ID is required.",
+        message: t("missingUserId"),
         type: "error",
       });
       return;
@@ -33,7 +36,7 @@ export default async function handler(req, res) {
 
     if (!user) {
       res.status(404).json({
-        message: "User not found.",
+        message: t("userNotFound"),
         type: "error",
       });
       return;
@@ -49,7 +52,7 @@ export default async function handler(req, res) {
     });
 
     res.status(200).json({
-      message: `User ${user.isBanned ? "unbanned" : "banned"} successfully.`,
+      message: t(user.isBanned ? "userUnbanned" : "userBanned"),
       type: "success",
     });
   } else {

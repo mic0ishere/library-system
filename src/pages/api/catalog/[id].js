@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
 import Joi from "joi/lib";
 import { bookSchema } from "@/lib/book-schema";
+import getTranslate from "@/lib/api-translation";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -16,6 +17,8 @@ export default async function handler(req, res) {
     res.status(403).end();
     return;
   }
+
+  const t = await getTranslate(req, "catalog");
 
   const { id: bookId } = req.query;
   const data = req.body;
@@ -31,8 +34,7 @@ export default async function handler(req, res) {
     })
     .catch((error) => {
       res.status(500).json({
-        message:
-          "Error occured while fetching book from the catalog. Please try again later.",
+        message: t("errorFindingBook"),
         type: "error",
       });
       return console.error(error);
@@ -40,7 +42,7 @@ export default async function handler(req, res) {
 
   if (!book) {
     res.status(404).json({
-      message: "Book not found in the catalog",
+      message: t("bookNotFound"),
       type: "error",
     });
     return;
@@ -51,7 +53,7 @@ export default async function handler(req, res) {
 
     if (book.status === status) {
       res.status(200).json({
-        message: `Book is already ${status}`,
+        message: t("bookAlreadyStatus", { status }),
         type: "error",
       });
       return;
@@ -92,7 +94,7 @@ export default async function handler(req, res) {
         const previousRental = book.rentals[book.rentals.length - 1];
         if (!previousRental) {
           res.status(400).json({
-            message: "No previous rental found",
+            message: t("noPreviousRental"),
             type: "error",
           });
           return;
@@ -133,7 +135,7 @@ export default async function handler(req, res) {
       } else if (status === "RENTED") {
         if (!userId) {
           res.status(400).json({
-            message: "User ID is required to change status",
+            message: t("missingRentUserId"),
             type: "error",
           });
           return;
@@ -147,7 +149,7 @@ export default async function handler(req, res) {
 
         if (!user) {
           res.status(404).json({
-            message: "User not found",
+            message: t("userNotFound"),
             type: "error",
           });
           return;
@@ -202,26 +204,29 @@ export default async function handler(req, res) {
       }
     } catch (error) {
       res.status(500).json({
-        message:
-          "Error occured while updating book status in the catalog. Please try again later.",
+        message: t("errorUpdatingStatus"),
         type: "error",
       });
       return console.error(error);
     }
 
     res.status(200).json({
-      message: `Updated status of ${book.title} in the catalog`,
+      message: t("successStatus", {
+        title: book.title,
+        status,
+      }),
       type: "success",
     });
   } else if (req.method === "PUT") {
     let validatedData = null;
 
     try {
-      validatedData = Joi.attempt(book, bookSchema);
+      validatedData = Joi.attempt(book, bookSchema, {
+        stripUnknown: true,
+      });
     } catch (error) {
       res.status(400).json({
-        message:
-          "Invalid data provided. Please check information and try again.",
+        message: t("invalidDataProvided"),
         type: "error",
       });
       return console.error(error);
@@ -236,15 +241,16 @@ export default async function handler(req, res) {
       });
     } catch (error) {
       res.status(500).json({
-        message:
-          "Error occured while updating book in the catalog. Please try again later.",
+        message: t("errorUpdatingBook"),
         type: "error",
       });
       return console.error(error);
     }
 
     res.status(200).json({
-      message: `Updated ${data.title} in the catalog`,
+      message: t("successUpdate", {
+        title: book.title,
+      }),
       type: "success",
     });
   } else if (req.method === "DELETE") {
@@ -256,15 +262,16 @@ export default async function handler(req, res) {
       });
     } catch (error) {
       res.status(500).json({
-        message:
-          "Error occured while deleting book from the catalog. Please try again later.",
+        message: t("errorDeletingBook"),
         type: "error",
       });
       return console.error(error);
     }
 
     res.status(200).json({
-      message: `Deleted ${book.title} from the catalog`,
+      message: t("successDelete", {
+        title: book.title,
+      }),
       type: "success",
     });
   } else {

@@ -1,1 +1,48 @@
-{}
+{
+    "prolongate": {
+        "missingBookId": "Book ID is required",
+        "bookNotFound": "Book not found",
+        "success": "Book prolongated successfully"
+    },
+    "users": {
+        "missingBookId": "Book ID is required",
+        "invalidType": "Invalid request type"
+    },
+    "ban": {
+        "missingUserId": "User ID is required",
+        "userNotFound": "User not found",
+        "successBan": "User banned successfully",
+        "successUnban": "User unbanned successfully"
+    },
+    "rent": {
+        "borrowingDisabled": "Renting books is disabled at the moment. Please contact an administator for more information.",
+        "bookNotAvailable": "Book is not available for rent at the moment. Please try again later.",
+        "userBanned": "You are banned from renting books. Please contact an administator for more information.",
+        "limitReached": "You have reached the limit of rented books. Please return some books before renting new ones.",
+        "bookNotRentedByUser": "Book is not connected to your account. Please try again later.",
+        "successRented": "Book rented successfully",
+        "successReturn": "Book returned successfully"
+    },
+    "import": {
+        "invalidDataProvided": "Invalid data provided. Please check information and try again.",
+        "errorAddingBooks": "An error occured while adding books to the catalog. Please try again later.",
+        "success": "Added {count} books to the catalog"
+    },
+    "catalog": {
+        "bookNotFound": "Book not found in the catalog",
+        "bookAlreadyStatus": "Book is already {status}",
+        "noPreviousRental": "No previous rental found for this book",
+        "missingRentUserId": "User ID is required to rent a book",
+        "userNotFound": "User not found",
+        "invalidDataProvided": "Invalid data provided. Please check information and try again.",
+        "errorAddingBook": "An error occured while adding book to the catalog. Please try again later.",
+        "errorFindingBook": "An error occured while fetching book information. Please try again later.",
+        "errorUpdatingStatus": "An error occured while updating book status. Please try again later.",
+        "errorUpdatingBook": "An error occured while updating book information. Please try again later.",
+        "errorDeletingBook": "An error occured while deleting book from the catalog. Please try again later.",
+        "successAdd": "Added {title} to the catalog",
+        "successStatus": "Updated status of {title} in the catalog to {status}",
+        "successUpdate": "Updated information of {title} in the catalog",
+        "successDelete": "Deleted {title} from the catalog"
+    }
+}

@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
 import Joi from "joi/lib";
 import { bookSchema } from "@/lib/book-schema";
+import getTranslate from "@/lib/api-translation";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -16,6 +17,8 @@ export default async function handler(req, res) {
     res.status(403).end();
     return;
   }
+
+  const t = await getTranslate(req, "import");
 
   const { books } = req.body;
 
@@ -34,8 +37,7 @@ export default async function handler(req, res) {
 
     if (validatedBooks.some((book) => book.error)) {
       res.status(400).json({
-        message:
-          "Invalid data provided. Please check information and try again.",
+        message: t("invalidDataProvided"),
         type: "error",
       });
       return;
@@ -47,15 +49,16 @@ export default async function handler(req, res) {
       });
     } catch (error) {
       res.status(500).json({
-        message:
-          "Error occured while adding books to the catalog. Please try again later.",
+        message: t("errorAddingBooks"),
         type: "error",
       });
       return console.error(error);
     }
 
     res.status(201).json({
-      message: `Added ${books.length} books to the catalog`,
+      message: t("success", {
+        count: books.length,
+      }),
       type: "success",
     });
   } else {

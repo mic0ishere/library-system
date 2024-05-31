@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
+import getTranslate from "@/lib/api-translation";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -15,11 +16,13 @@ export default async function handler(req, res) {
     return;
   }
 
+  const t = await getTranslate(req, "prolongate")
+
   if (req.method === "PATCH") {
     const { bookId } = req.query;
     if (!bookId) {
       res.status(400).json({
-        message: "Book ID is required.",
+        message: t("missingBookId"),
         type: "error",
       });
       return;
@@ -42,7 +45,7 @@ export default async function handler(req, res) {
 
     if (!book) {
       res.status(404).json({
-        message: "Book not found.",
+        message: t("bookNotFound"),
         type: "error",
       });
       return;
@@ -78,7 +81,7 @@ export default async function handler(req, res) {
     });
 
     res.status(200).json({
-      message: "Book has been prolonged successfully.",
+      message: t("success"),
       type: "success",
       data: {
         dueDate: newDueDate,

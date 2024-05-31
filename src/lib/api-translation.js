@@ -9,11 +9,11 @@ const fetchLanguageFile = async (locale, section) => {
     if (!finalDictionary)
       throw new Error(`No dictionary found for ${locale}/api-responses.json`);
 
-    return finalDictionary[section];
+    return finalDictionary?.[section] || {};
   } catch (e) {
     console.error(e);
   }
-  return dictionaryEn[section];
+  return dictionaryEn?.[section] || {};
 };
 
 async function getTranslate(req, section) {

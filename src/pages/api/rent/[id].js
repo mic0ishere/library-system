@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import prisma from "@/lib/prisma";
 import isAdmin from "@/lib/is-admin";
+import getTranslate from "@/lib/api-translation";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -9,6 +10,8 @@ export default async function handler(req, res) {
     res.status(401).end();
     return;
   }
+
+  const t = await getTranslate(req, "rent");
 
   const { id: bookId } = req.query;
 
@@ -18,8 +21,7 @@ export default async function handler(req, res) {
       !isAdmin(session.user.email)
     ) {
       res.status(200).json({
-        message:
-          "Renting books is disabled at the moment. Please contact an administrator for more information.",
+        message: t("borrowingDisabled"),
         type: "error",
       });
       return;
@@ -33,8 +35,7 @@ export default async function handler(req, res) {
 
     if (!book || book.status !== "AVAILABLE") {
       res.status(200).json({
-        message:
-          "Book is not available for rent at the moment. Please try again later.",
+        message: t("bookNotAvailable"),
         type: "error",
       });
       return;
@@ -56,7 +57,7 @@ export default async function handler(req, res) {
 
     if (user.isBanned) {
       res.status(200).json({
-        message: `You are banned from renting books. Please contact an admin for more information.`,
+        message: t("userBanned"),
         type: "error",
       });
       return;
@@ -66,7 +67,7 @@ export default async function handler(req, res) {
 
     if (rentedBooks.length >= process.env.NEXT_PUBLIC_MAXRENTALS) {
       res.status(200).json({
-        message: `You have reached the maximum number of rented books. Please return a book to rent another one.`,
+        message: t("limitReached"),
         type: "error",
       });
       return;
@@ -108,7 +109,7 @@ export default async function handler(req, res) {
     });
 
     res.status(200).json({
-      message: "Book has been rented successfully",
+      message: t("successRented"),
       type: "success",
     });
   } else if (req.method === "DELETE") {
@@ -128,8 +129,7 @@ export default async function handler(req, res) {
       book.rentedBy.email !== session.user.email
     ) {
       res.status(200).json({
-        message:
-          "Book is not connected to your account. Please try again later.",
+        message: t("bookNotRentedByUser"),
         type: "error",
       });
       return;
@@ -162,7 +162,7 @@ export default async function handler(req, res) {
     });
 
     res.status(200).json({
-      message: "Book has been returned successfully",
+      message: t("successReturn"),
       type: "success",
     });
   } else {
