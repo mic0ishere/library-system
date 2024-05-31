@@ -9,11 +9,19 @@ import Navbar from "@/components/navbar";
 import { GeistSans } from "geist/font/sans";
 import "@/styles/globals.css";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    document.cookie = `LOCALE=${router.locale}; path=/`;
+  }, [router.locale]);
+
   return (
     <SessionProvider session={session}>
       <Head>

@@ -4,7 +4,7 @@ const fetchLanguageFile = async (locale, section) => {
   try {
     const finalDictionary = await import(
       `../../locales/${locale}/api-responses.json`
-    );
+    ).catch(() => null);
 
     if (!finalDictionary)
       throw new Error(`No dictionary found for ${locale}/api-responses.json`);
@@ -16,26 +16,25 @@ const fetchLanguageFile = async (locale, section) => {
   return dictionaryEn[section];
 };
 
-async function translateApi(req, section) {
-  const locale = req.cookies.get("NEXT_LOCALE") || "en";
+async function getTranslate(req, section) {
+  const locale = req.cookies?.LOCALE || "en";
+
   const dictionary = await fetchLanguageFile(locale, section);
 
-  return {
-    t: (key, ...args) => {
-      let text = dictionary[key] || key;
-      if (args.length === 0) return text;
+  return (key, ...args) => {
+    let text = dictionary[key] || key;
+    if (args.length === 0) return text;
 
-      if (typeof args[0] === "object") {
-        return Object.entries(args[0]).reduce((acc, [key, value]) => {
-          return acc.replace(`{${key}}`, value);
-        }, text);
-      }
-
-      return args.reduce((acc, value, index) => {
-        return acc.replace(`{${index}}`, value);
+    if (typeof args[0] === "object") {
+      return Object.entries(args[0]).reduce((acc, [key, value]) => {
+        return acc.replace(`{${key}}`, value);
       }, text);
-    },
-  };
+    }
+
+    return args.reduce((acc, value, index) => {
+      return acc.replace(`{${index}}`, value);
+    }, text);
+  }
 }
 
-export default translateApi;
+export default getTranslate;
