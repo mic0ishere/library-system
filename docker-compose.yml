@@ -4,8 +4,7 @@ services:
     image: mysql:latest
     environment:
       MYSQL_DATABASE: 'database'
-      MYSQL_USER: 'discord_bot'
-      MYSQL_PASSWORD: 'p_ssword'
-      MYSQL_ROOT_PASSWORD: 'some-secret-password'
+      MYSQL_USER: 'librarysystem'
+      MYSQL_PASSWORD: 'some-secret-password'
     ports:
       - "3306:3306"
